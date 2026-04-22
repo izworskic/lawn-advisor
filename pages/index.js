@@ -1,14 +1,24 @@
 import Layout from "../components/Layout";
 import LawnAdvisorTool from "../components/LawnAdvisorTool";
 import Link from "next/link";
+import { PRODUCTS, PRICE_LABEL } from "../data/products";
 
-const CURRENT_MONTH = new Date().toLocaleString("en-US", { month: "long" });
+const CURRENT_MONTH = new Date().getMonth();
 const CURRENT_YEAR = new Date().getFullYear();
+const CURRENT_MONTH_NAME = new Date().toLocaleString("en-US", { month: "long" });
+
+const SEASON_MAP = {
+  0:"winter",1:"winter",2:"spring",3:"spring",4:"spring",
+  5:"summer",6:"summer",7:"summer",8:"fall",9:"fall",10:"fall",11:"winter"
+};
+const CURRENT_SEASON = SEASON_MAP[CURRENT_MONTH];
+// Top 4 products for current season on homepage strip
+const NOW_PRODUCTS = PRODUCTS.filter(p => p.season.includes(CURRENT_SEASON)).slice(0, 4);
 
 export default function HomePage() {
   return (
     <Layout
-      title={`${CURRENT_MONTH} ${CURRENT_YEAR} Lawn Care by Address: Hyperlocal Plans for Your Property`}
+      title={`${CURRENT_MONTH_NAME} ${CURRENT_YEAR} Lawn Care by Address: Hyperlocal Plans for Your Property`}
       description="Enter your full address and get a lawn care plan tailored to your exact property: USDA zone, soil type, local grass species, microclimate, and live weather conditions."
       canonical="https://lawn.chrisizworski.com"
     >
@@ -79,6 +89,48 @@ export default function HomePage() {
           <LawnAdvisorTool />
         </div>
       </div>
+
+      {/* Seasonal product strip */}
+      <section style={{ padding: "32px 24px 0", background: "#fff", borderBottom: "1px solid var(--border)" }}>
+        <div className="container">
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 8 }}>
+            <div>
+              <div className="section-label">Buy Now</div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--green-dark)", fontWeight: 700 }}>
+                Top picks for {CURRENT_MONTH_NAME}
+              </div>
+            </div>
+            <Link href="/shop" className="btn btn-outline" style={{ fontSize: 12, padding: "8px 18px" }}>
+              Full Product Shop →
+            </Link>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12, paddingBottom: 28 }}>
+            {NOW_PRODUCTS.map(p => (
+              <a
+                key={p.id}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "block", padding: "14px 16px",
+                  background: "var(--green-pale)", borderRadius: 12,
+                  border: "1px solid var(--border)", textDecoration: "none",
+                  transition: "all 0.15s",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.borderColor = "var(--green-bright)"; e.currentTarget.style.transform = "translateY(-2px)"; }}
+                onMouseLeave={e => { e.currentTarget.style.borderColor = "var(--border)"; e.currentTarget.style.transform = "translateY(0)"; }}
+              >
+                <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 13, color: "var(--green-dark)", marginBottom: 3 }}>{p.name}</div>
+                <div style={{ fontSize: 11, color: "var(--green-primary)", marginBottom: 6 }}>{p.tagline}</div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{PRICE_LABEL[p.priceRange]}</span>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: "#ff9900" }}>Shop Amazon →</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* How it works */}
       <section style={{ padding: "64px 24px", background: "#fff" }}>

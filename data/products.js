@@ -1,0 +1,260 @@
+// Curated lawn care products for Michigan cool-season lawns
+// All links use Amazon Associates tag: michigantrout-20
+// Using search URLs for reliability (ASINs can rotate)
+
+export const AMZ = (query) =>
+  `https://www.amazon.com/s?k=${encodeURIComponent(query)}&tag=michigantrout-20`;
+
+export const PRODUCTS = [
+  // FERTILIZERS
+  {
+    id: "scotts-triple-action",
+    category: "fertilizer",
+    season: ["spring"],
+    name: "Scotts Turf Builder Triple Action",
+    tagline: "Feed, kill weeds, prevent crabgrass in one pass",
+    why: "Covers three critical spring tasks at once: fertilization, broadleaf weed control, and crabgrass prevention. Apply when soil temps hit 55 degrees F. Ideal for Zone 6a and 6b lawns in April.",
+    priceRange: "$$",
+    rating: 4.5,
+    url: AMZ("Scotts Turf Builder Triple Action spring lawn"),
+  },
+  {
+    id: "milorganite",
+    category: "fertilizer",
+    season: ["spring", "summer", "fall"],
+    name: "Milorganite Organic Nitrogen Fertilizer",
+    tagline: "Slow-release organic nitrogen, never burns",
+    why: "Milwaukee-made, Great Lakes tough. Milorganite feeds slowly over 8 to 10 weeks and will not burn Kentucky Bluegrass even in summer heat. Safe to apply during dormancy. The most forgiving fertilizer for Michigan lawns.",
+    priceRange: "$",
+    rating: 4.7,
+    url: AMZ("Milorganite organic nitrogen fertilizer 32 lb"),
+  },
+  {
+    id: "scotts-winterguard",
+    category: "fertilizer",
+    season: ["fall"],
+    name: "Scotts WinterGuard Fall Lawn Fertilizer",
+    tagline: "Load roots with potassium before the freeze",
+    why: "The single highest-ROI lawn task in Michigan is a late October winterizer. This 32-0-10 formula drives potassium into roots, hardening cell walls against freeze-thaw heaving and reducing spring recovery time by weeks.",
+    priceRange: "$$",
+    rating: 4.6,
+    url: AMZ("Scotts WinterGuard fall lawn fertilizer"),
+  },
+  {
+    id: "jonathan-green-mag-i-cal",
+    category: "fertilizer",
+    season: ["spring", "fall"],
+    name: "Jonathan Green Mag-I-Cal Plus",
+    tagline: "pH correction for compacted Michigan soils",
+    why: "Michigan soils trend acidic, especially under mature trees. Low pH locks out nutrients regardless of how much fertilizer you apply. Mag-I-Cal raises pH and loosens compacted clay-loam soils common in Bay, Saginaw, and Genesee Counties.",
+    priceRange: "$$",
+    rating: 4.5,
+    url: AMZ("Jonathan Green Mag-I-Cal Plus lime lawn"),
+  },
+
+  // PRE-EMERGENTS
+  {
+    id: "scotts-halts",
+    category: "pre-emergent",
+    season: ["spring"],
+    name: "Scotts Halts Crabgrass Preventer",
+    tagline: "Stop crabgrass before it starts",
+    why: "Crabgrass germinates when soil temps hit 55 degrees F. In Zone 6a (Bay City, Saginaw, Midland) that window opens in early April. Halts creates a chemical barrier that prevents germination. Apply before forsythia finishes blooming. Do not use the same year you overseed.",
+    priceRange: "$$",
+    rating: 4.4,
+    url: AMZ("Scotts Halts crabgrass preventer 5000 sq ft"),
+  },
+  {
+    id: "preen-lawn",
+    category: "pre-emergent",
+    season: ["spring"],
+    name: "Preen Extended Control Weed Preventer",
+    tagline: "6-month pre-emergent barrier for established lawns",
+    why: "Where Scotts Halts lasts 4 months, Preen Extended runs through June, covering the full crabgrass germination window in northern Michigan zones where spring arrives late. Good choice for Zone 5b and 5a properties.",
+    priceRange: "$$",
+    rating: 4.3,
+    url: AMZ("Preen extended control weed preventer lawn"),
+  },
+
+  // GRASS SEED
+  {
+    id: "jonathan-green-black-beauty",
+    category: "seed",
+    season: ["fall", "spring"],
+    name: "Jonathan Green Black Beauty Ultra Grass Seed",
+    tagline: "The benchmark cool-season blend for Michigan",
+    why: "Black Beauty is the gold standard for Michigan overseeding. The blend of elite Kentucky Bluegrass, Tall Fescue, and Perennial Ryegrass establishes fast, handles Michigan clay soils, and has genuine drought tolerance once rooted. Overseed in early September for best results.",
+    priceRange: "$$",
+    rating: 4.6,
+    url: AMZ("Jonathan Green Black Beauty Ultra grass seed"),
+  },
+  {
+    id: "pennington-smart-seed",
+    category: "seed",
+    season: ["fall", "spring"],
+    name: "Pennington Smart Seed Sun and Shade",
+    tagline: "Handles Michigan's mixed canopy lots",
+    why: "Most Michigan lawns have mixed sun and shade from mature hardwoods. This blend combines Fine Fescue for shade with Perennial Ryegrass for traffic areas. Uses 30 percent less water than standard seed once established. Good choice for wooded neighborhoods in Traverse City, Petoskey, and the northern Lower Peninsula.",
+    priceRange: "$",
+    rating: 4.5,
+    url: AMZ("Pennington Smart Seed sun shade grass seed"),
+  },
+  {
+    id: "scotts-thick-r-lawn",
+    category: "seed",
+    season: ["fall"],
+    name: "Scotts Turf Builder Thick'R Lawn",
+    tagline: "Seed, fertilizer, and soil improver in one bag",
+    why: "For lawns that need a full renovation rather than just overseeding, Thick'R Lawn combines seed with a starter fertilizer and soil improver. The 3-in-1 format cuts setup time significantly. Apply after aerating in early September.",
+    priceRange: "$$$",
+    rating: 4.4,
+    url: AMZ("Scotts Turf Builder ThickR Lawn grass seed fertilizer"),
+  },
+
+  // SPREADERS
+  {
+    id: "scotts-edgeguard",
+    category: "spreader",
+    season: ["spring", "summer", "fall"],
+    name: "Scotts Turf Builder EdgeGuard Mini Broadcast Spreader",
+    tagline: "Precision spreading for small to mid-size lots",
+    why: "The EdgeGuard technology prevents fertilizer from drifting into flower beds and hardscapes. Holds up to 5,000 sq ft per fill. Calibrates precisely to Scotts product settings, making overfertilization errors nearly impossible.",
+    priceRange: "$",
+    rating: 4.5,
+    url: AMZ("Scotts Turf Builder EdgeGuard Mini broadcast spreader"),
+  },
+  {
+    id: "earthway-spreader",
+    category: "spreader",
+    season: ["spring", "summer", "fall"],
+    name: "Earthway 2150 Commercial Walk-Behind Spreader",
+    tagline: "For large lots and serious lawn programs",
+    why: "If you are managing more than a quarter-acre or doing your own commercial-grade applications, the Earthway 2150 is the spreader the pros use. Stainless steel components resist rust, and the enclosed gearbox handles Michigan winters without seizing. Built to last a decade.",
+    priceRange: "$$$",
+    rating: 4.6,
+    url: AMZ("Earthway 2150 commercial walk-behind broadcast spreader"),
+  },
+
+  // IRRIGATION
+  {
+    id: "rain-bird-oscillating",
+    category: "irrigation",
+    season: ["spring", "summer"],
+    name: "Rain Bird Rectangular Oscillating Sprinkler",
+    tagline: "Even coverage on rectangular lots",
+    why: "Michigan's July dry spells hit Kentucky Bluegrass hard. The Rain Bird oscillating pattern delivers 1 inch of water without runoff on flat or gently sloped lawns. The built-in timer connector supports early-morning watering, which reduces fungal disease risk compared to evening irrigation.",
+    priceRange: "$",
+    rating: 4.4,
+    url: AMZ("Rain Bird rectangular oscillating sprinkler lawn"),
+  },
+  {
+    id: "orbit-traveling",
+    category: "irrigation",
+    season: ["summer"],
+    name: "Orbit Traveling Sprinkler",
+    tagline: "Covers large irregular lots hands-free",
+    why: "Follows your garden hose path automatically. Perfect for large irregular Michigan lots where a fixed sprinkler requires constant repositioning. Covers up to 13,500 sq ft per setup. No electricity needed.",
+    priceRange: "$$",
+    rating: 4.2,
+    url: AMZ("Orbit traveling sprinkler lawn"),
+  },
+
+  // AERATORS
+  {
+    id: "agri-fab-aerator",
+    category: "aerator",
+    season: ["fall"],
+    name: "Agri-Fab 45-0299 Tow-Behind Plug Aerator",
+    tagline: "Core aeration for clay-heavy Michigan soils",
+    why: "Compacted clay soils in Bay, Saginaw, and Genesee Counties suffocate roots by late summer. Core aeration pulls 3-inch plugs and is dramatically more effective than spike aeration. Tow behind a riding mower or garden tractor. Do this every September before overseeding.",
+    priceRange: "$$$",
+    rating: 4.4,
+    url: AMZ("Agri-Fab 45-0299 tow behind plug aerator"),
+  },
+  {
+    id: "yard-butler-aerator",
+    category: "aerator",
+    season: ["fall"],
+    name: "Yard Butler Lawn Coring Aerator",
+    tagline: "Manual core aeration for small lots",
+    why: "For lots under 3,000 sq ft, a manual coring aerator is faster and cheaper than renting equipment. The Yard Butler pulls genuine 3-inch cores on clay-loam soils. Pair with overseeding immediately after for maximum seed-to-soil contact.",
+    priceRange: "$",
+    rating: 4.3,
+    url: AMZ("Yard Butler lawn coring aerator manual"),
+  },
+
+  // FUNGICIDES
+  {
+    id: "scotts-diseaseex",
+    category: "fungicide",
+    season: ["spring", "summer"],
+    name: "Scotts DiseaseEx Lawn Fungicide",
+    tagline: "Broad-spectrum protection for Michigan's wet springs",
+    why: "Dollar spot, brown patch, and red thread thrive in Michigan's cool wet springs and humid summers. DiseaseEx provides systemic protection for up to 4 weeks. Apply preventively in late May before conditions turn favorable for fungal growth. Critical for fine fescue lawns in shaded northern Michigan lots.",
+    priceRange: "$$",
+    rating: 4.3,
+    url: AMZ("Scotts DiseaseEx lawn fungicide"),
+  },
+  {
+    id: "propiconazole",
+    category: "fungicide",
+    season: ["spring", "fall"],
+    name: "BioAdvanced Fungus Control for Lawns",
+    tagline: "Snow mold prevention before winter",
+    why: "Snow mold is the silent killer in Michigan, especially in Zone 5b and 5a zones where lawns spend 4 to 5 months under snow cover. Apply before the first permanent snowfall in November. Also controls Fusarium patch, which appears in spring under wet, cool conditions.",
+    priceRange: "$$",
+    rating: 4.3,
+    url: AMZ("BioAdvanced fungus control lawns snow mold"),
+  },
+
+  // WEED CONTROL
+  {
+    id: "spectracide-weed-stop",
+    category: "weed",
+    season: ["spring", "summer"],
+    name: "Spectracide Weed Stop for Lawns",
+    tagline: "Post-emergent broadleaf weed control",
+    why: "For dandelions, clover, and creeping Charlie that slip past pre-emergent applications. Ready-to-spray formula kills 470-plus broadleaf weeds without harming Kentucky Bluegrass or Tall Fescue. Apply when air temps are between 60 and 85 degrees F for best absorption. Avoid spraying before rain.",
+    priceRange: "$",
+    rating: 4.3,
+    url: AMZ("Spectracide Weed Stop for Lawns ready to spray"),
+  },
+  {
+    id: "tenacity",
+    category: "weed",
+    season: ["spring", "fall"],
+    name: "Tenacity Herbicide (Mesotrione)",
+    tagline: "The professional tool for nimblewill and crabgrass",
+    why: "Tenacity is what your lawn care service uses and won't tell you about. Mesotrione selectively kills nimblewill, creeping bentgrass, and a long list of broadleaf weeds without harming cool-season grasses. Also works as a pre-emergent. Small bottle covers a full acre. Worth the price.",
+    priceRange: "$$$",
+    rating: 4.6,
+    url: AMZ("Tenacity Turf Herbicide mesotrione lawn weed control"),
+  },
+
+  // SOIL TESTING
+  {
+    id: "soil-test-kit",
+    category: "soil",
+    season: ["spring", "fall"],
+    name: "MySoil Soil Test Kit",
+    tagline: "Know your soil before you spend on fertilizer",
+    why: "Michigan soils vary wildly by county and even by neighborhood. A soil test tells you actual pH, nitrogen, phosphorus, and potassium levels so you stop guessing and stop wasting money on nutrients you already have. Mail-in kit with a digital results report and specific product recommendations.",
+    priceRange: "$",
+    rating: 4.5,
+    url: AMZ("MySoil soil test kit mail in lab results"),
+  },
+];
+
+export const CATEGORIES = [
+  { id: "fertilizer",  label: "Fertilizers",       icon: "🌿", desc: "Feed the roots, not just the blades." },
+  { id: "pre-emergent", label: "Pre-Emergents",    icon: "🛡️", desc: "Stop weeds before they germinate." },
+  { id: "seed",        label: "Grass Seed",         icon: "🌾", desc: "Cool-season blends for Michigan lawns." },
+  { id: "spreader",    label: "Spreaders",          icon: "🔄", desc: "Precision application gear." },
+  { id: "irrigation",  label: "Irrigation",         icon: "💧", desc: "Water deeply, water right." },
+  { id: "aerator",     label: "Aerators",           icon: "⛏️", desc: "Break compaction, open the soil." },
+  { id: "fungicide",   label: "Fungicides",         icon: "🔬", desc: "Stop dollar spot, red thread, snow mold." },
+  { id: "weed",        label: "Weed Control",       icon: "🍃", desc: "Post-emergent broadleaf and grass killers." },
+  { id: "soil",        label: "Soil Health",        icon: "🧪", desc: "Test and correct before you fertilize." },
+];
+
+export const PRICE_LABEL = { "$": "Under $20", "$$": "$20 to $50", "$$$": "$50+" };

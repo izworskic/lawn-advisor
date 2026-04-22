@@ -59,7 +59,8 @@ export default function Layout({ children, title, description, canonical }) {
           🌿 Perfect Lawn Advisor
         </Link>
         <ul className="nav-links">
-          <li><Link href="/">ZIP Tool</Link></li>
+          <li><Link href="/">Address Tool</Link></li>
+          <li><Link href="/shop">Shop</Link></li>
           <li><Link href="/lawn-guide">City Guides</Link></li>
           <li><Link href="/lawn-guide/michigan">Michigan</Link></li>
           <li><Link href="/about">About</Link></li>
@@ -102,7 +103,8 @@ export default function Layout({ children, title, description, canonical }) {
           <div>
             <h4>Quick Links</h4>
             <ul>
-              <li><Link href="/">ZIP Code Tool</Link></li>
+              <li><Link href="/">Address Tool</Link></li>
+              <li><Link href="/shop">Product Shop</Link></li>
               <li><Link href="/lawn-guide">City Guides</Link></li>
               <li><Link href="/about">About Chris Izworski</Link></li>
               <li><a href="https://chrisizworski.com/contact">Contact</a></li>
