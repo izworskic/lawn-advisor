@@ -243,7 +243,7 @@ export default function CityPage({ city, calendar, tasks, faq, intro, nearbySlug
             This page covers {city.name} broadly. Our AI tool factors in current weather, your specific address, 
             and today's conditions for a recommendation that's right for <em>this week</em>.
           </p>
-          <LawnAdvisorTool defaultZip={city.zip} />
+          <LawnAdvisorTool defaultAddress={`Your Address, ${city.name}, MI ${city.zip}`} />
         </div>
 
         {/* Internal links */}

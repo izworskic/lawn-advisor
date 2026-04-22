@@ -8,8 +8,8 @@ const CURRENT_YEAR = new Date().getFullYear();
 export default function HomePage() {
   return (
     <Layout
-      title={`${CURRENT_MONTH} ${CURRENT_YEAR} Lawn Care by ZIP: Personalized Lawn Plans`}
-      description="Enter your ZIP code and get a personalized lawn care plan based on your USDA hardiness zone, grass type, local soil, and current weather. Michigan and beyond."
+      title={`${CURRENT_MONTH} ${CURRENT_YEAR} Lawn Care by Address: Hyperlocal Plans for Your Property`}
+      description="Enter your full address and get a lawn care plan tailored to your exact property: USDA zone, soil type, local grass species, microclimate, and live weather conditions."
       canonical="https://lawn.chrisizworski.com"
     >
       {/* Schema: SoftwareApplication */}
@@ -22,7 +22,7 @@ export default function HomePage() {
             name: "Perfect Lawn Advisor",
             applicationCategory: "LifestyleApplication",
             url: "https://lawn.chrisizworski.com",
-            description: "AI-powered personalized lawn care plans by ZIP code",
+            description: "AI-powered personalized lawn care plans by street address",
             author: { "@type": "Person", name: "Chris Izworski", url: "https://chrisizworski.com" },
             offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
           }),
@@ -69,14 +69,13 @@ export default function HomePage() {
               WebkitTextFillColor: "transparent",
               animation: "shimmer 4s linear infinite",
             }}>perfect lawn</span>
-            {" "}starts with your ZIP code.
+            {" "}starts with your address.
           </h1>
           <p style={{ color: "var(--green-light)", fontSize: "clamp(14px, 2vw, 18px)", maxWidth: 580, margin: "0 auto 36px", lineHeight: 1.7, opacity: 0.9 }}>
-            Get a personalized lawn care plan based on your USDA hardiness zone, grass type, local soil, 
-            and what's happening with the weather right now. Not generic advice. Your lawn.
+            Get a lawn care plan built for your specific property. We analyze your exact address: hardiness zone, soil type, neighborhood microclimate, local pest pressure, and what's happening with the weather at your location right now.
           </p>
 
-          {/* ZIP Tool embedded in hero */}
+          {/* Address Tool embedded in hero */}
           <LawnAdvisorTool />
         </div>
       </div>
@@ -92,10 +91,10 @@ export default function HomePage() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
             {[
-              { icon: "📍", title: "Your Exact Location", desc: "We map your ZIP to your USDA hardiness zone, Koppen climate class, and dominant soil type, not state-level averages." },
+              { icon: "📍", title: "Your Exact Location", desc: "We analyze your exact street address: USDA zone, Koppen climate class, neighborhood soil type, and local microclimate factors like proximity to water or tree canopy." },
               { icon: "🌾", title: "Your Grass Species", desc: "Kentucky Bluegrass thrives differently than Fine Fescue or Tall Fescue. We tailor every recommendation to what's actually growing in your yard." },
               { icon: "🌦️", title: "Live Weather Data", desc: "Current conditions and recent precipitation affect everything from when to fertilize to whether your lawn needs water today." },
-              { icon: "📅", title: "12-Month Calendar", desc: "A full-year care calendar showing exactly when to fertilize, seed, aerate, and winterize, mapped to your frost dates, not a generic schedule." },
+              { icon: "📅", title: "12-Month Calendar", desc: "A full-year care calendar mapped to your property's specific frost dates and local conditions, not a regional average." },
             ].map((f, i) => (
               <div key={i} className="card" style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 40, marginBottom: 16 }}>{f.icon}</div>
@@ -162,7 +161,7 @@ export default function HomePage() {
             <div className="card" style={{ background: "var(--green-pale)", border: "none" }}>
               <div className="section-label">Methodology</div>
               {[
-                "USDA Hardiness Zone mapping by ZIP code",
+                "USDA Hardiness Zone mapping by exact address",
                 "NRCS Web Soil Survey for soil type",
                 "NWS current conditions via web search",
                 "MSU Extension turfgrass research",
