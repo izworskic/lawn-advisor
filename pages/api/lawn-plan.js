@@ -1,11 +1,11 @@
 import { Redis } from "@upstash/redis";
+import { MICHIGAN_CITIES } from "../../data/michigan-cities";
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
   token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
 
-// Greedy extraction: first { to last } handles all nested objects correctly
 function extractJSON(text) {
   const fenceMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
   if (fenceMatch) {
@@ -29,71 +29,90 @@ function extractZip(address) {
   return m ? m[1] : "00000";
 }
 
-function buildPrompt(address) {
+// Look up verified city data from our database by ZIP
+function lookupCity(zip) {
+  return MICHIGAN_CITIES.find(c => c.zip === zip) || null;
+}
+
+function buildPrompt(address, verified) {
   const today = new Date().toLocaleDateString("en-US", {
     month: "long", day: "numeric", year: "numeric",
   });
+
+  // If we have verified data, anchor the prompt with it so the model cannot hallucinate zone/soil/grass
+  const verifiedBlock = verified ? `
+VERIFIED FACTS — These are authoritative values from USDA and NRCS databases. Do NOT contradict or override them with web search results:
+- USDA Hardiness Zone: Zone ${verified.zone} (NOT Zone 5a, NOT Zone 5b — this is confirmed Zone ${verified.zone})
+- Average last spring frost: ${verified.avgLastFrost}
+- Average first fall frost: ${verified.avgFirstFrost}
+- Dominant grass type for this location: ${verified.grassType}
+- Soil type: ${verified.soilType}
+- County: ${verified.county} County, Michigan
+- Known local challenges: ${verified.challenges}
+
+Use web search ONLY for: current weather conditions, recent rainfall, and any hyperlocal property-specific details. All zone and grass type information above is already verified and correct.
+` : `
+Use web search to research:
+1. USDA hardiness zone and Koppen climate class for this exact location
+2. Current weather conditions and recent rainfall at this address
+3. Typical soil type for this neighborhood
+4. Dominant grass species used in this area
+5. Any locally relevant factors: proximity to water, elevation, urban heat, lake effect, etc.
+`;
 
   return `You are an expert turfgrass agronomist providing a hyperlocal lawn care plan for a specific property address.
 
 Today is ${today}.
 Property address: ${address}
-
-Use web search to research:
-1. USDA hardiness zone and Koppen climate class for this exact location
-2. Current weather conditions and recent rainfall at this address
-3. Typical soil type for this neighborhood (check NRCS Web Soil Survey if possible)
-4. Dominant grass species used in this area
-5. Any locally relevant factors: proximity to water, elevation, urban heat, lake effect, etc.
-
+${verifiedBlock}
 Think about what makes THIS specific address unique for lawn care:
-- Street-level microclimates (shading from nearby buildings or trees based on the street name/orientation)
+- Street-level microclimates (shade from nearby buildings or trees, slope and aspect)
 - Urban vs. suburban vs. rural character of the neighborhood
 - Whether it is near a lake, river, or large body of water
-- Any regional pest or disease pressures common to this exact municipality
+- Regional pest and disease pressures specific to this municipality
 
-Then output a single JSON object. Output only the JSON, no introduction or explanation.
+Then output a single JSON object. Output only the JSON, no introduction or explanation before or after.
 
 {
   "address": "${address}",
-  "location": "Bay City, MI",
-  "zone": "Zone 6a",
+  "location": "West Branch, MI",
+  "zone": "${verified ? `Zone ${verified.zone}` : "Zone 6a"}",
   "climate": "Humid Continental",
-  "grassType": "Kentucky Bluegrass / Fine Fescue mix",
+  "grassType": "${verified ? verified.grassType : "Kentucky Bluegrass / Fine Fescue mix"}",
   "season": "spring",
-  "soilTemp": "52 degrees F, warming",
-  "soilType": "Clay loam (typical for this neighborhood)",
-  "currentCondition": "One sentence: what is happening with lawns in this specific location right now.",
-  "propertyNotes": "One sentence about what makes this specific address notable for lawn care (proximity to water, soil type, neighborhood character, microclimate, etc.)",
-  "insight": "Two to three sentences of expert analysis specific to this address: local soil challenges, regional pest pressure, microclimate effects, and what separates great lawns from average ones at this exact location.",
-  "urgentTask": "The single most important lawn task for this specific address and today's date, in one sentence.",
+  "soilTemp": "50 degrees F, warming",
+  "soilType": "${verified ? verified.soilType : "Loam"}",
+  "currentCondition": "One sentence: what is happening with lawns at this specific address right now.",
+  "propertyNotes": "One sentence about what makes this specific address notable for lawn care: proximity to water, soil, microclimate, neighborhood character, etc.",
+  "insight": "Two to three sentences of expert analysis grounded in the VERIFIED FACTS above. Reference the correct zone (Zone ${verified ? verified.zone : "6a"}), the correct grass type, and the specific local challenges for this address. Do not contradict the verified zone or grass data.",
+  "urgentTask": "The single most important lawn task for this address and today's date, one sentence.",
   "tasks": [
     {
       "category": "fertilize",
       "title": "Apply Pre-Emergent Fertilizer",
-      "detail": "Detailed instructions specific to this location. Include product rate, soil temp trigger, and local timing notes.",
+      "detail": "Detailed instructions for this zone and grass type. Include rate, soil temp trigger, and local timing.",
       "timing": "This week",
       "product": "Scotts Turf Builder Halts Crabgrass Preventer",
       "month": 3
     }
   ],
   "calendar": [
-    { "month": 2, "task": "fertilize", "intensity": 2 },
-    { "month": 3, "task": "mow", "intensity": 3 }
+    { "month": 2, "task": "fertilize", "intensity": 2 }
   ],
   "tips": [
-    "Tip specific to this address and neighborhood.",
-    "Tip two referencing local conditions.",
+    "Tip specific to this address, zone, and local conditions.",
+    "Tip two.",
     "Tip three."
   ]
 }
 
 Rules:
-- tasks: 5 to 8 items covering the next 60 days, specific to this address
-- calendar: full 12-month cycle, month is 0-indexed (0 = January)
+- tasks: 5 to 8 items for the next 60 days, matched to Zone ${verified ? verified.zone : "the correct zone"}
+- calendar: full 12-month cycle, month is 0-indexed (0 = January), matched to this zone's growing season
 - season must be one of: spring, summer, fall, winter
 - category must be one of: fertilize, mow, water, overseed, aerate, weed, winterize
 - product must be a real Amazon-searchable product name
+- zone in output must match the VERIFIED FACTS above exactly
 - Output only the JSON object`;
 }
 
@@ -101,16 +120,18 @@ export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
   const { address } = req.body;
-  if (!address || String(address).trim().length < 10) {
+  const cleanAddress = String(address || "").trim();
+  if (cleanAddress.length < 10) {
     return res.status(400).json({ error: "Please enter a full street address including ZIP code." });
   }
 
-  const cleanAddress = String(address).trim();
   const zip = extractZip(cleanAddress);
-
   if (zip === "00000") {
     return res.status(400).json({ error: "Address must include a 5-digit ZIP code for accurate results." });
   }
+
+  // Look up verified city data — prevents AI from hallucinating zone/soil/grass info
+  const verified = lookupCity(zip);
 
   // Cache by normalized address + week
   const week = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
@@ -134,8 +155,8 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
         max_tokens: 3000,
-        tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 4 }],
-        messages: [{ role: "user", content: buildPrompt(cleanAddress) }],
+        tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }],
+        messages: [{ role: "user", content: buildPrompt(cleanAddress, verified) }],
       }),
     });
 
@@ -150,6 +171,13 @@ export default async function handler(req, res) {
     const plan = extractJSON(fullText);
     if (!plan) {
       return res.status(500).json({ error: "Could not build a plan for that address. Please try again." });
+    }
+
+    // Enforce verified facts on the output — last line of defense against hallucination
+    if (verified) {
+      plan.zone = `Zone ${verified.zone}`;
+      plan.grassType = plan.grassType || verified.grassType;
+      plan.soilType = plan.soilType || verified.soilType;
     }
 
     try { await redis.set(cacheKey, plan, { ex: 60 * 60 * 24 * 7 }); } catch {}
