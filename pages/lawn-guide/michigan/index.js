@@ -1,6 +1,6 @@
-import Layout from "../../components/Layout";
+import Layout from "../../../components/Layout";
 import Link from "next/link";
-import { MICHIGAN_CITIES } from "../../data/michigan-cities";
+import { MICHIGAN_CITIES } from "../../../data/michigan-cities";
 
 const ZONES = ["6b", "6a", "5b", "5a"];
 const ZONE_LABELS = {

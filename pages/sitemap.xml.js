@@ -1,4 +1,4 @@
-import { MICHIGAN_CITIES } from "../../data/michigan-cities";
+import { MICHIGAN_CITIES } from "../data/michigan-cities";
 
 export default function SitemapXML(req, res) {}
 
