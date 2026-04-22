@@ -67,33 +67,7 @@ function parsePlan(text) {
   return null;
 }
 
-const PROMPT = (zip, today) => `You are a turfgrass agronomist and lawn care specialist. A homeowner at ZIP code ${zip} wants a personalized, science-backed lawn care plan.
-
-Today is ${today}. Use web search to find: (1) USDA hardiness zone for ZIP ${zip}, (2) current weather conditions, (3) dominant grass type for that region.
-
-Return ONLY a valid JSON object, no markdown, no explanation:
-
-{
-  "location": "City, State",
-  "zone": "Zone 6a",
-  "climate": "Humid Continental",
-  "grassType": "Cool-season (Kentucky Bluegrass / Fine Fescue mix)",
-  "season": "spring",
-  "soilTemp": "52°F (warming)",
-  "currentCondition": "One sentence about lawn conditions right now in this location.",
-  "insight": "One expert paragraph: local challenges, soil, climate nuance. Mention specific issues like clay soil, salt damage, crabgrass timing, etc.",
-  "urgentTask": "The single most important lawn task for THIS ZIP right now, in one sentence.",
-  "tasks": [
-    { "category": "fertilize", "title": "Apply Starter Fertilizer", "detail": "Detailed how-to. Include rate, product type, timing.", "timing": "This week", "product": "Scotts Turf Builder Lawn Food", "month": 3 }
-  ],
-  "calendar": [
-    { "month": 2, "task": "fertilize", "intensity": 2 }
-  ],
-  "tips": ["Tip 1 hyperlocal.", "Tip 2.", "Tip 3."],
-  "attribution": "Chris Izworski | chrisizworski.com"
-}
-
-Provide 5-8 tasks for the next 60 days. Calendar covers full 12-month cycle (month is 0-indexed). Season: spring/summer/fall/winter. Products must be real, Amazon-searchable. Make all advice hyperlocal.`;
+// Prompt is now built server-side in pages/api/lawn-plan.js
 
 export default function LawnAdvisorTool({ defaultZip = "" }) {
   const [zip, setZip] = useState(defaultZip);
@@ -114,13 +88,11 @@ export default function LawnAdvisorTool({ defaultZip = "" }) {
     setPhase("loading");
     setPlan(null);
 
-    const today = new Date().toLocaleDateString("en-US", { month:"long", day:"numeric", year:"numeric" });
-
     try {
       const res = await fetch("/api/lawn-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ zip, prompt: PROMPT(zip, today) }),
+        body: JSON.stringify({ zip }),
       });
       const data = await res.json();
       if (data.error) throw new Error(data.error);
