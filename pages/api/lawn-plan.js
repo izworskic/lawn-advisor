@@ -1,5 +1,23 @@
 import { Redis } from "@upstash/redis";
 import { MICHIGAN_CITIES } from "../../data/michigan-cities";
+import { US_CITIES, buildZipMap } from "../../data/us-cities";
+
+// Combined ZIP lookup: Michigan data first (more detailed), then national
+const _zipMap = buildZipMap();
+// Override with more-detailed Michigan entries
+for (const city of MICHIGAN_CITIES) {
+  _zipMap[city.zip] = {
+    zip: city.zip,
+    city: city.name,
+    state: "MI",
+    zone: city.zone,
+    grassType: city.grassType,
+    soilType: city.soilType,
+    challenges: city.challenges,
+    avgLastFrost: city.avgLastFrost,
+    avgFirstFrost: city.avgFirstFrost,
+  };
+}
 
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL,
@@ -29,9 +47,9 @@ function extractZip(address) {
   return m ? m[1] : "00000";
 }
 
-// Look up verified city data from our database by ZIP
+// Look up verified city data from our combined ZIP map
 function lookupCity(zip) {
-  return MICHIGAN_CITIES.find(c => c.zip === zip) || null;
+  return _zipMap[zip] || null;
 }
 
 function buildPrompt(address, verified) {
