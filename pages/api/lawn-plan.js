@@ -50,7 +50,7 @@ function extractZip(address) {
 
 // Strip citation tags and stray HTML from AI-generated text.
 // The web_search tool wraps claims in <cite index="...">...</cite> and sometimes
-// similar markers — we want the plain prose only.
+// similar markers. We want plain prose only.
 function stripCitations(value) {
   if (typeof value === "string") {
     return value
