@@ -59,7 +59,7 @@ function buildPrompt(address, verified) {
 
   // If we have verified data, anchor the prompt with it so the model cannot hallucinate zone/soil/grass
   const verifiedBlock = verified ? `
-VERIFIED FACTS — These are authoritative values from USDA and NRCS databases. Do NOT contradict or override them with web search results:
+VERIFIED FACTS: These are authoritative values from USDA and NRCS databases. Do NOT contradict or override them with web search results:
 - USDA Hardiness Zone: Zone ${verified.zone} (confirmed Zone ${verified.zone}, do not change this)
 - Average last spring frost: ${verified.avgLastFrost}
 - Average first fall frost: ${verified.avgFirstFrost}
