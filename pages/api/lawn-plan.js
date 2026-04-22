@@ -60,7 +60,7 @@ function buildPrompt(address, verified) {
   // If we have verified data, anchor the prompt with it so the model cannot hallucinate zone/soil/grass
   const verifiedBlock = verified ? `
 VERIFIED FACTS — These are authoritative values from USDA and NRCS databases. Do NOT contradict or override them with web search results:
-- USDA Hardiness Zone: Zone ${verified.zone} (NOT Zone 5a, NOT Zone 5b — this is confirmed Zone ${verified.zone})
+- USDA Hardiness Zone: Zone ${verified.zone} (confirmed Zone ${verified.zone}, do not change this)
 - Average last spring frost: ${verified.avgLastFrost}
 - Average first fall frost: ${verified.avgFirstFrost}
 - Dominant grass type for this location: ${verified.grassType}
@@ -148,7 +148,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Address must include a 5-digit ZIP code for accurate results." });
   }
 
-  // Look up verified city data — prevents AI from hallucinating zone/soil/grass info
+  // Look up verified city data: prevents AI from hallucinating zone/soil/grass info
   const verified = lookupCity(zip);
 
   // Cache by normalized address + week
@@ -191,7 +191,7 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Could not build a plan for that address. Please try again." });
     }
 
-    // Enforce verified facts on the output — last line of defense against hallucination
+    // Enforce verified facts on the output: last line of defense against hallucination
     if (verified) {
       plan.zone = `Zone ${verified.zone}`;
       plan.grassType = plan.grassType || verified.grassType;
