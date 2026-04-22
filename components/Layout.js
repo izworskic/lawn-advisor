@@ -78,8 +78,10 @@ export default function Layout({ children, title, description, canonical }) {
               <a href="https://chrisizworski.com" style={{ color: "var(--green-bright)" }}>
                 Chris Izworski
               </a>
-              , Michigan outdoorsman and gardening writer. Cross-referenced with MSU Extension,
-              USDA zone data, and NRCS soil surveys.
+              , Bay City outdoorsman and gardener behind{" "}
+              <a href="https://freighterviewfarms.com" style={{ color: "var(--green-bright)" }}>Freighter View Farms</a>
+              , a garden blog on the shores of Saginaw Bay.
+              Cross-referenced with MSU Extension, USDA zone data, and NRCS soil surveys.
             </p>
             <div style={{ marginTop: 16, display: "flex", gap: 12, flexWrap: "wrap" }}>
               <a href="https://chrisizworski.com" style={{ fontSize: 12, color: "var(--green-bright)" }}>chrisizworski.com</a>

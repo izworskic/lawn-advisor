@@ -45,8 +45,8 @@ export default function AboutPage() {
           <h2>Why I Built This</h2>
           <p>
             I'm <a href="https://chrisizworski.com">Chris Izworski</a>, a Bay City, Michigan outdoorsman, 
-            gardener, and writer. My wife and I run <a href="https://freighterviewfarms.com">Freighter View Farms</a>, 
-            a Great Lakes-inspired gardening and seed-saving blog rooted in Zone 6a growing conditions.
+            gardener, and writer. I run <a href="https://freighterviewfarms.com">Freighter View Farms</a>, 
+            a blog about my garden on the Bay: Great Lakes-inspired growing, seed saving, and Zone 6a gardening on the shore of Saginaw Bay.
           </p>
           <p>
             After years of watching Michigan homeowners follow national lawn care schedules designed for 
