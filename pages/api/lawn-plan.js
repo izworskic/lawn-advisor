@@ -1,6 +1,7 @@
 import { Redis } from "@upstash/redis";
 import { MICHIGAN_CITIES } from "../../data/michigan-cities";
 import { US_CITIES, buildZipMap } from "../../data/us-cities";
+import { computeGrade, makePlanSlug } from "../../lib/grade";
 
 // Combined ZIP lookup: Michigan data first (more detailed), then national
 const _zipMap = buildZipMap();
@@ -197,6 +198,17 @@ export default async function handler(req, res) {
       plan.grassType = plan.grassType || verified.grassType;
       plan.soilType = plan.soilType || verified.soilType;
     }
+
+    // Compute shareable lawn grade
+    plan.grade = computeGrade(plan);
+
+    // Save a shareable version to Redis with a short slug
+    const slug = makePlanSlug();
+    try {
+      await redis.set(`lawn:share:${slug}`, plan, { ex: 60 * 60 * 24 * 30 }); // 30-day share window
+    } catch {}
+    plan.shareSlug = slug;
+    plan.shareUrl = `https://lawn.chrisizworski.com/plan/${slug}`;
 
     try { await redis.set(cacheKey, plan, { ex: 60 * 60 * 24 * 7 }); } catch {}
 

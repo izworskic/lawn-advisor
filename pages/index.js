@@ -38,6 +38,58 @@ export default function HomePage() {
           }),
         }}
       />
+      {/* Schema: FAQPage for rich snippet eligibility */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "How is Perfect Lawn Advisor different from other lawn care apps?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Most lawn apps use ZIP code averages. Perfect Lawn Advisor analyzes your exact street address to account for microclimate factors like proximity to water, soil type, and neighborhood character. USDA zone, grass type, and soil data are verified against authoritative databases to prevent AI hallucination.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Is Perfect Lawn Advisor free?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Yes. The address tool, city guides, articles, and personalized plans are all free. The site is supported by Amazon affiliate links on recommended products.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "How often should I update my lawn plan?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Plans refresh weekly to account for changing weather and seasonal shifts. For best results, generate a new plan at the start of each season.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "What USDA zones does Perfect Lawn Advisor cover?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "All zones from 3a (Alaska) through 12b (Hawaii). We have verified ZIP-level data for over 150 cities across every state plus DC. Addresses outside our verified database use live web search for zone and grass type.",
+                },
+              },
+              {
+                "@type": "Question",
+                name: "Can I share my lawn plan with others?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Yes. Every generated plan gets a unique shareable URL with a lawn grade and personalized results. Plans remain accessible for 30 days and can be shared via native share, copy link, or social media buttons.",
+                },
+              },
+            ],
+          }),
+        }}
+      />
 
       {/* Hero */}
       <div className="hero-dark" style={{ position: "relative" }}>

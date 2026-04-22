@@ -102,6 +102,10 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
       if (data.plan) {
         setPlan(data.plan);
         setPhase("result");
+        // Redirect to shareable plan URL so users can share/bookmark
+        if (data.plan.shareSlug && typeof window !== "undefined") {
+          window.history.pushState({}, "", `/plan/${data.plan.shareSlug}`);
+        }
       } else {
         throw new Error("No plan returned. Try again.");
       }

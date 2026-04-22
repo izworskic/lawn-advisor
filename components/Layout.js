@@ -13,7 +13,10 @@ export default function Layout({ children, title, description, canonical }) {
         <title>{pageTitle}</title>
         <meta name="description" content={pageDesc} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#7ab648" />
         <link rel="canonical" href={canonical || "https://lawn.chrisizworski.com"} />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
 
         {/* Open Graph */}
         <meta property="og:title" content={pageTitle} />
@@ -60,9 +63,9 @@ export default function Layout({ children, title, description, canonical }) {
         </Link>
         <ul className="nav-links">
           <li><Link href="/">Address Tool</Link></li>
+          <li><Link href="/articles">Articles</Link></li>
           <li><Link href="/shop">Shop</Link></li>
           <li><Link href="/lawn-guide">City Guides</Link></li>
-          <li><Link href="/lawn-guide/michigan">Michigan</Link></li>
           <li><Link href="/about">About</Link></li>
         </ul>
       </nav>
@@ -104,10 +107,10 @@ export default function Layout({ children, title, description, canonical }) {
             <h4>Quick Links</h4>
             <ul>
               <li><Link href="/">Address Tool</Link></li>
+              <li><Link href="/articles">Articles</Link></li>
               <li><Link href="/shop">Product Shop</Link></li>
               <li><Link href="/lawn-guide">City Guides</Link></li>
               <li><Link href="/about">About Chris Izworski</Link></li>
-              <li><a href="https://chrisizworski.com/contact">Contact</a></li>
             </ul>
           </div>
         </div>
