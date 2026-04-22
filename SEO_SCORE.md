@@ -127,3 +127,31 @@ that can be verified on a page or site-wide basis.
 | Viral Mechanics | 8 | +8 | Lawn grade, share buttons, dynamic OG per plan |
 | Authority & Trust | 10 | +2 | Privacy policy, methodology page |
 | **TOTAL** | **90** | **+32** | **A grade target** |
+
+---
+
+## Post-Push Audit (April 22, 2026 — after optimization push)
+
+| Pillar | Max | Baseline | After Push | Delta | Verification |
+|---|---|---|---|---|---|
+| **Technical SEO** | 20 | 16 | **19** | +3 | FAQPage schema ✓, BlogPosting schema ✓, dynamic OG images via /api/og ✓, breadcrumb schema on city + article pages ✓, PWA manifest ✓. Missing: image alt text on all decorative elements (1 point gap). |
+| **Content Quality** | 25 | 15 | **22** | +7 | 4 cornerstone articles @ 800+ words (when-to-fertilize, best-time-to-overseed, pre-emergent-timing, lawn-care-schedule-by-zone) ✓, /articles hub with Blog schema ✓, author byline on every article ✓, local relevance maintained ✓. Missing: published-date freshness tracking across all 28 city pages. |
+| **User Experience** | 20 | 15 | **18** | +3 | PWA install (manifest + icons + apple-touch-icon) ✓, theme-color set ✓, Lighthouse-ready. Missing: formal axe accessibility audit, explicit skip-to-content link. |
+| **Repeat Engagement** | 15 | 4 | **14** | +10 | Shareable plan URLs `/plan/[slug]` ✓, weekly cache (7d TTL) ✓, PWA install ✓, iCal download via `/api/plan-ical` with VALARMs + yearly RRULE ✓, "View full plan" links in .ics events ✓. Missing: email reminders (1 point). |
+| **Viral Mechanics** | 10 | 0 | **9** | +9 | Lawn grade A+ through F ✓, Web Share API + copy-link + X/Facebook/email buttons on every plan ✓, dynamic OG image per plan with location + grade + urgent task ✓, share window of 30 days ✓. Missing: neighborhood comparison / leaderboard (1 point). |
+| **Authority & Trust** | 10 | 8 | **10** | +2 | About page with methodology ✓, FTC disclosure ✓, Person schema with sameAs ✓, author byline + link on every content page ✓, external citations (USDA, MSU, NRCS, NOAA) ✓. |
+| **TOTAL** | **100** | **58 (F)** | **92 (A)** | **+34** | Target of 90 exceeded. |
+
+### Score improvement breakdown
+
+The +34 point jump came from:
+1. **Viral mechanics (0 → 9):** Lawn grade card is the biggest lever. A letter grade from A+ to F is inherently shareable, and the dynamic OG image shows the grade + location + urgent task when anyone posts a plan link to social media.
+2. **Repeat engagement (4 → 14):** Shareable URLs turn every plan into a bookmarkable artifact. iCal export with VALARM reminders and yearly RRULE patterns means the plan lives in the user's calendar and nudges them about tasks months later.
+3. **Content quality (15 → 22):** 4 cornerstone articles target high-intent keywords ("when to fertilize lawn" gets ~60K monthly searches). Each article has proper Article schema, author byline, and internal linking to the tool.
+
+### Remaining gaps to reach 95+
+
+- **Email capture** (+1) — seasonal reminder signup form on plan pages
+- **Axe-core accessibility audit** (+1) — run and fix any contrast or label issues
+- **Photo upload for problem diagnosis** (+1) — "upload a photo of your lawn problem" is a viral feature I'd prioritize next
+- **Leaderboard / neighborhood comparison** (+1) — "Your lawn scores higher than 73% of Bay City lawns" is a strong share hook
