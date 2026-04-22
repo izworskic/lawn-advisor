@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   if (!slug) return res.status(400).send("Missing slug");
 
   let plan;
-  try { plan = await redis.get(`lawn:share:${slug}`); } catch {}
+  try { plan = await redis.get(`lawn:share:v2:${slug}`) || await redis.get(`lawn:share:${slug}`); } catch {}
   if (!plan) return res.status(404).send("Plan not found");
 
   const now = new Date();

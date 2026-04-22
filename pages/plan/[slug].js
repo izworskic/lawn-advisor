@@ -204,7 +204,7 @@ export async function getServerSideProps({ params }) {
     token: process.env.UPSTASH_REDIS_REST_TOKEN,
   });
   try {
-    const plan = await redis.get(`lawn:share:${params.slug}`);
+    const plan = await redis.get(`lawn:share:v2:${params.slug}`) || await redis.get(`lawn:share:${params.slug}`);
     if (!plan) return { props: { notFound: true, slug: params.slug } };
     return { props: { plan, slug: params.slug } };
   } catch {

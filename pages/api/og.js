@@ -14,7 +14,7 @@ export default async function handler(req) {
         url: process.env.UPSTASH_REDIS_REST_URL,
         token: process.env.UPSTASH_REDIS_REST_TOKEN,
       });
-      plan = await redis.get(`lawn:share:${slug}`);
+      plan = await redis.get(`lawn:share:v2:${slug}`) || await redis.get(`lawn:share:${slug}`);
     } catch {}
   }
 

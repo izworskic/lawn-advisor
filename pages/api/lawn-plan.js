@@ -48,6 +48,30 @@ function extractZip(address) {
   return m ? m[1] : "00000";
 }
 
+// Strip citation tags and stray HTML from AI-generated text.
+// The web_search tool wraps claims in <cite index="...">...</cite> and sometimes
+// similar markers — we want the plain prose only.
+function stripCitations(value) {
+  if (typeof value === "string") {
+    return value
+      .replace(/<\/?cite[^>]*>/gi, "")           // <cite index="..."> and </cite>
+      .replace(/<\/?antml:cite[^>]*>/gi, "")     //  variants
+      .replace(/<\/?source[^>]*>/gi, "")         // <source> tags
+      .replace(/\[\d+(?:,\s*\d+)*\]/g, "")       // [1], [1,2,3] numeric citations
+      .replace(/\s+\.(\s|$)/g, ".$1")            // fix " ." left after tag removal
+      .replace(/\s+,/g, ",")                     // fix " ," artifacts
+      .replace(/\s{2,}/g, " ")                   // collapse double spaces
+      .trim();
+  }
+  if (Array.isArray(value)) return value.map(stripCitations);
+  if (value && typeof value === "object") {
+    const out = {};
+    for (const k of Object.keys(value)) out[k] = stripCitations(value[k]);
+    return out;
+  }
+  return value;
+}
+
 // Look up verified city data from our combined ZIP map
 function lookupCity(zip) {
   return _zipMap[zip] || null;
@@ -132,6 +156,7 @@ Rules:
 - category must be one of: fertilize, mow, water, overseed, aerate, weed, winterize
 - product must be a real Amazon-searchable product name
 - zone in output must match the VERIFIED FACTS above exactly
+- DO NOT include any citation tags, footnote markers, or reference numbers in any string values. No <cite>, no [1], no source markers. Plain prose only.
 - Output only the JSON object`;
 }
 
@@ -155,7 +180,7 @@ export default async function handler(req, res) {
   // Cache by normalized address + week
   const week = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
   const addressKey = cleanAddress.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 60);
-  const cacheKey = `lawn:addr:${addressKey}:w${week}`;
+  const cacheKey = `lawn:addr:v2:${addressKey}:w${week}`;
 
   try {
     const cached = await redis.get(cacheKey);
@@ -192,27 +217,30 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: "Could not build a plan for that address. Please try again." });
     }
 
+    // Strip citation tags and numeric references from every string field
+    const cleanPlan = stripCitations(plan);
+
     // Enforce verified facts on the output: last line of defense against hallucination
     if (verified) {
-      plan.zone = `Zone ${verified.zone}`;
-      plan.grassType = plan.grassType || verified.grassType;
-      plan.soilType = plan.soilType || verified.soilType;
+      cleanPlan.zone = `Zone ${verified.zone}`;
+      cleanPlan.grassType = cleanPlan.grassType || verified.grassType;
+      cleanPlan.soilType = cleanPlan.soilType || verified.soilType;
     }
 
     // Compute shareable lawn grade
-    plan.grade = computeGrade(plan);
+    cleanPlan.grade = computeGrade(cleanPlan);
 
     // Save a shareable version to Redis with a short slug
     const slug = makePlanSlug();
     try {
-      await redis.set(`lawn:share:${slug}`, plan, { ex: 60 * 60 * 24 * 30 }); // 30-day share window
+      await redis.set(`lawn:share:v2:${slug}`, cleanPlan, { ex: 60 * 60 * 24 * 30 });
     } catch {}
-    plan.shareSlug = slug;
-    plan.shareUrl = `https://lawn.chrisizworski.com/plan/${slug}`;
+    cleanPlan.shareSlug = slug;
+    cleanPlan.shareUrl = `https://lawn.chrisizworski.com/plan/${slug}`;
 
-    try { await redis.set(cacheKey, plan, { ex: 60 * 60 * 24 * 7 }); } catch {}
+    try { await redis.set(cacheKey, cleanPlan, { ex: 60 * 60 * 24 * 7 }); } catch {}
 
-    return res.status(200).json({ plan });
+    return res.status(200).json({ plan: cleanPlan });
   } catch (e) {
     return res.status(500).json({ error: e.message || "Request failed. Please try again." });
   }
