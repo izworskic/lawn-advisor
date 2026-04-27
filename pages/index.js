@@ -18,7 +18,7 @@ const NOW_PRODUCTS = PRODUCTS.filter(p => p.season.includes(CURRENT_SEASON)).sli
 export default function HomePage() {
   return (
     <Layout
-      title={`${CURRENT_MONTH_NAME} ${CURRENT_YEAR} Lawn Care by Address: Hyperlocal Plans for Your Property`}
+      title={`Chris Izworski's Perfect Lawn Advisor — ${CURRENT_MONTH_NAME} ${CURRENT_YEAR} Lawn Care by Address`}
       description="Enter your full address and get a lawn care plan tailored to your exact property: USDA zone, soil type, local grass species, microclimate, and live weather conditions."
       canonical="https://lawn.chrisizworski.com"
     >
@@ -33,7 +33,23 @@ export default function HomePage() {
             applicationCategory: "LifestyleApplication",
             url: "https://lawn.chrisizworski.com",
             description: "AI-powered personalized lawn care plans by street address",
-            author: { "@type": "Person", name: "Chris Izworski", url: "https://chrisizworski.com" },
+            author: {
+              "@type": "Person",
+              "@id": "https://chrisizworski.com/#person",
+              name: "Chris Izworski",
+              url: "https://chrisizworski.com",
+              sameAs: [
+                "https://chrisizworski.com",
+                "https://trout.chrisizworski.com",
+                "https://troutdaily.chrisizworski.com",
+                "https://birding.chrisizworski.com",
+                "https://birdingdaily.chrisizworski.com",
+                "https://gazette.chrisizworski.com",
+                "https://lawn.chrisizworski.com",
+                "https://freighterviewfarms.com",
+                "https://www.wikidata.org/wiki/Q138283432",
+              ],
+            },
             offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
           }),
         }}
@@ -123,6 +139,17 @@ export default function HomePage() {
             marginBottom: 20,
             letterSpacing: -1,
           }}>
+            <span style={{
+              display: "block",
+              fontFamily: "var(--font-sans, system-ui)",
+              fontSize: "clamp(11px, 1.4vw, 13px)",
+              fontWeight: 600,
+              letterSpacing: "0.22em",
+              textTransform: "uppercase",
+              color: "var(--green-light)",
+              marginBottom: 12,
+              opacity: 0.85,
+            }}>By Chris Izworski</span>
             Your{" "}
             <span style={{
               background: "linear-gradient(90deg, var(--green-bright), var(--green-light), var(--green-bright))",
