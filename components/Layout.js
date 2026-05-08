@@ -89,8 +89,11 @@ export default function Layout({ children, title, description, canonical }) {
             </p>
             <div style={{ marginTop: 16, display: "flex", gap: 12, flexWrap: "wrap" }}>
               <a href="https://chrisizworski.com" style={{ fontSize: 12, color: "var(--green-bright)" }}>chrisizworski.com</a>
+              <a href="https://michigantroutreport.com" style={{ fontSize: 12, color: "rgba(197,232,160,0.6)" }}>Michigan Trout Report</a>
+              <a href="https://michiganbirdingreport.com" style={{ fontSize: 12, color: "rgba(197,232,160,0.6)" }}>Michigan Birding Report</a>
+              <a href="https://greatlakeslevels.org" style={{ fontSize: 12, color: "rgba(197,232,160,0.6)" }}>Great Lakes Lake Levels</a>
               <a href="https://freighterviewfarms.com" style={{ fontSize: 12, color: "rgba(197,232,160,0.6)" }}>Freighter View Farms</a>
-              <a href="https://trout.chrisizworski.com" style={{ fontSize: 12, color: "rgba(197,232,160,0.6)" }}>Michigan Trout Report</a>
+              <a href="https://www.youtube.com/@izworskic" style={{ fontSize: 12, color: "rgba(197,232,160,0.6)" }}>YouTube</a>
             </div>
           </div>
           <div>
