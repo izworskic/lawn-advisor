@@ -1,0 +1,13 @@
+# Lawn Advisor
+> A free lawn analysis tool by Chris Izworski: enter a US address and get a graded, climate-zone-correct lawn plan with a seasonal task calendar.
+
+Plans are built from verified zone and climate facts for the address, with shareable links and an iCal export of the task schedule.
+
+## Key pages
+- [Lawn analyzer](https://lawn.chrisizworski.com/): enter an address for a graded plan
+- [Articles](https://lawn.chrisizworski.com/articles): cornerstone lawn care guides
+- [Michigan city guides](https://lawn.chrisizworski.com/lawn-guide/michigan): 28 city-specific lawn guides
+- [Shop](https://lawn.chrisizworski.com/shop): recommended products
+
+## Author
+Chris Izworski (https://chrisizworski.com), Michigan gardener and outdoor writer. Related: Freighter View Farms (https://freighterviewfarms.com), Michigan Phenology (https://phenology.chrisizworski.com).
