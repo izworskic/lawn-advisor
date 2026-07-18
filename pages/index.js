@@ -4,8 +4,6 @@ import Link from "next/link";
 import { PRODUCTS, PRICE_LABEL } from "../data/products";
 
 const CURRENT_MONTH = new Date().getMonth();
-const CURRENT_YEAR = new Date().getFullYear();
-const CURRENT_MONTH_NAME = new Date().toLocaleString("en-US", { month: "long" });
 
 const SEASON_MAP = {
   0:"winter",1:"winter",2:"spring",3:"spring",4:"spring",
@@ -18,7 +16,7 @@ const NOW_PRODUCTS = PRODUCTS.filter(p => p.season.includes(CURRENT_SEASON)).sli
 export default function HomePage() {
   return (
     <Layout
-      title={`Chris Izworski's Perfect Lawn Advisor — ${CURRENT_MONTH_NAME} ${CURRENT_YEAR} Lawn Care by Address`}
+      title="Personalized Lawn Care Plan by Address"
       description="Enter your full address and get a lawn care plan tailored to your exact property: USDA zone, soil type, local grass species, microclimate, and live weather conditions."
       canonical="https://lawn.chrisizworski.com"
     >
@@ -127,7 +125,7 @@ export default function HomePage() {
         <div className="container-narrow" style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
           <div style={{ marginBottom: 12 }}>
             <span className="tag" style={{ background: "rgba(122,182,72,0.15)", color: "var(--green-bright)", fontSize: 11, letterSpacing: 2 }}>
-              🌿 {CURRENT_MONTH} {CURRENT_YEAR} · AI-Powered · Free
+              🌿 Address-Based · AI-Powered · Free
             </span>
           </div>
           <h1 style={{
@@ -176,7 +174,7 @@ export default function HomePage() {
             <div>
               <div className="section-label">Buy Now</div>
               <div style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--green-dark)", fontWeight: 700 }}>
-                Top picks for {CURRENT_MONTH_NAME}
+                Seasonal lawn care picks
               </div>
             </div>
             <Link href="/shop" className="btn btn-outline" style={{ fontSize: 12, padding: "8px 18px" }}>
