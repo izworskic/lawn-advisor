@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Head from "next/head";
+import ToolNetworkLinks from "./ToolNetworkLinks";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -18,19 +19,16 @@ export default function Layout({ children, title, description, canonical }) {
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
 
-        {/* Open Graph */}
         <meta property="og:title" content={pageTitle} />
         <meta property="og:description" content={pageDesc} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonical || "https://lawn.chrisizworski.com"} />
         <meta property="og:image" content="https://lawn.chrisizworski.com/og-image.jpg" />
 
-        {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={pageDesc} />
 
-        {/* Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -49,7 +47,6 @@ export default function Layout({ children, title, description, canonical }) {
           }}
         />
 
-        {/* AdSense */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8222782620788075"
@@ -71,6 +68,7 @@ export default function Layout({ children, title, description, canonical }) {
       </nav>
 
       <main>{children}</main>
+      <ToolNetworkLinks />
 
       <footer className="footer">
         <div className="footer-grid">
