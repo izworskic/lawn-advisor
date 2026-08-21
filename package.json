@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node scripts/check-seo.mjs"
+    "test": "node scripts/check-seo.mjs && node scripts/check-network.mjs"
   },
   "dependencies": {
     "@upstash/redis": "^1.34.0",
