@@ -16,6 +16,7 @@ export default function Layout({ children, title, description, canonical }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#7ab648" />
         <link rel="canonical" href={canonical || "https://lawn.chrisizworski.com"} />
+        <link rel="author" href="https://chrisizworski.com/chris-izworski/" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
 
@@ -39,8 +40,9 @@ export default function Layout({ children, title, description, canonical }) {
               url: "https://lawn.chrisizworski.com",
               author: {
                 "@type": "Person",
+                "@id": "https://chrisizworski.com/#person",
                 name: "Chris Izworski",
-                url: "https://chrisizworski.com",
+                url: "https://chrisizworski.com/chris-izworski/",
               },
               description: pageDesc,
             }),
@@ -77,7 +79,7 @@ export default function Layout({ children, title, description, canonical }) {
             <p>
               Hyperlocal lawn care guidance powered by AI, local climate data, and turfgrass science.
               Research and methodology by{" "}
-              <a href="https://chrisizworski.com" style={{ color: "var(--green-bright)" }}>
+              <a href="https://chrisizworski.com/chris-izworski/" style={{ color: "var(--green-bright)" }}>
                 Chris Izworski
               </a>
               , Bay City outdoorsman and gardener behind{" "}
@@ -86,7 +88,7 @@ export default function Layout({ children, title, description, canonical }) {
               Cross-referenced with MSU Extension, USDA zone data, and NRCS soil surveys.
             </p>
             <div style={{ marginTop: 16, display: "flex", gap: 12, flexWrap: "wrap" }}>
-              <a href="https://chrisizworski.com" style={{ fontSize: 12, color: "var(--green-bright)" }}>chrisizworski.com</a>
+              <a href="https://chrisizworski.com/chris-izworski/" style={{ fontSize: 12, color: "var(--green-bright)" }}>chrisizworski.com</a>
               <a href="https://michigantroutreport.com" style={{ fontSize: 12, color: "rgba(197,232,160,0.6)" }}>Michigan Trout Report</a>
               <a href="https://michiganbirdingreport.com" style={{ fontSize: 12, color: "rgba(197,232,160,0.6)" }}>Michigan Birding Report</a>
               <a href="https://greatlakeslevels.org" style={{ fontSize: 12, color: "rgba(197,232,160,0.6)" }}>Great Lakes Lake Levels</a>

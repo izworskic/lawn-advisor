@@ -17,4 +17,8 @@ assert.ok(
   "layout must append the concise site name to page titles",
 );
 
+assert.ok(layout.includes('rel="author" href="https://chrisizworski.com/chris-izworski/"'), "layout needs canonical author link");
+assert.ok(layout.includes('"@id": "https://chrisizworski.com/#person"'), "layout needs canonical Person ID");
+assert.ok(layout.includes('url: "https://chrisizworski.com/chris-izworski/"'), "layout Person URL needs canonical profile");
+
 console.log("SEO checks passed.");
