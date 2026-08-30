@@ -14,8 +14,9 @@ export default function AboutPage() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Person",
+            "@id": "https://chrisizworski.com/#person",
             name: "Chris Izworski",
-            url: "https://chrisizworski.com",
+            url: "https://chrisizworski.com/chris-izworski/",
             sameAs: [
               "https://chrisizworski.com",
               "https://trout.chrisizworski.com",
@@ -54,7 +55,7 @@ export default function AboutPage() {
         <div className="prose">
           <h2>Why I Built This</h2>
           <p>
-            I'm <a href="https://chrisizworski.com">Chris Izworski</a>, a Bay City, Michigan outdoorsman, 
+            I'm <a href="https://chrisizworski.com/chris-izworski/">Chris Izworski</a>, a Bay City, Michigan outdoorsman, 
             gardener, and writer. I run <a href="https://freighterviewfarms.com">Freighter View Farms</a>, 
             a blog about my garden on the Bay: Great Lakes-inspired growing, seed saving, and Zone 6a gardening on the shore of Saginaw Bay.
           </p>
