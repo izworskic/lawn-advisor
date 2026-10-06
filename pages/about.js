@@ -16,7 +16,7 @@ export default function AboutPage() {
             "@type": "Person",
             "@id": "https://chrisizworski.com/#person",
             name: "Chris Izworski",
-            url: "https://chrisizworski.com/chris-izworski/",
+            url: "https://chrisizworski.com/",
             sameAs: [
               "https://chrisizworski.com",
               "https://trout.chrisizworski.com",

@@ -42,8 +42,9 @@ export default function Layout({ children, title, description, canonical }) {
                 "@type": "Person",
                 "@id": "https://chrisizworski.com/#person",
                 name: "Chris Izworski",
-                url: "https://chrisizworski.com/chris-izworski/",
+                url: "https://chrisizworski.com/",
               },
+              publisher: { "@id": "https://chrisizworski.com/#person" },
               description: pageDesc,
             }),
           }}
