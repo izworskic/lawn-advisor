@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 
 const homepage = readFileSync("pages/index.js", "utf8");
 const layout = readFileSync("components/Layout.js", "utf8");
+const about = readFileSync("pages/about.js", "utf8");
 
 assert.ok(
   homepage.includes('title="Personalized Lawn Care Plan by Address"'),
@@ -19,6 +20,10 @@ assert.ok(
 
 assert.ok(layout.includes('rel="author" href="https://chrisizworski.com/chris-izworski/"'), "layout needs canonical author link");
 assert.ok(layout.includes('"@id": "https://chrisizworski.com/#person"'), "layout needs canonical Person ID");
-assert.ok(layout.includes('url: "https://chrisizworski.com/chris-izworski/"'), "layout Person URL needs canonical profile");
+assert.ok(layout.includes('url: "https://chrisizworski.com/"'), "shared Person URL must identify the creator homepage");
+assert.ok(homepage.includes('url: "https://chrisizworski.com/"'), "homepage Person URL must identify the creator homepage");
+assert.ok(about.includes('url: "https://chrisizworski.com/"'), "about Person URL must identify the creator homepage");
+assert.ok(layout.includes('rel="author" href="https://chrisizworski.com/chris-izworski/"'), "head author link must use the canonical profile");
+assert.ok(layout.includes('href="https://chrisizworski.com/chris-izworski/" style={{ color: "var(--green-bright)" }}>'), "visible creator credit must link to the canonical profile");
 
 console.log("SEO checks passed.");

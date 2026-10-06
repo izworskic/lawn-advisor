@@ -35,7 +35,7 @@ export default function HomePage() {
               "@type": "Person",
               "@id": "https://chrisizworski.com/#person",
               name: "Chris Izworski",
-              url: "https://chrisizworski.com",
+              url: "https://chrisizworski.com/",
               sameAs: [
                 "https://chrisizworski.com",
                 "https://trout.chrisizworski.com",
