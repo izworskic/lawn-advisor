@@ -24,6 +24,6 @@ assert.ok(layout.includes('url: "https://chrisizworski.com/"'), "shared Person U
 assert.ok(homepage.includes('url: "https://chrisizworski.com/"'), "homepage Person URL must identify the creator homepage");
 assert.ok(about.includes('url: "https://chrisizworski.com/"'), "about Person URL must identify the creator homepage");
 assert.ok(layout.includes('rel="author" href="https://chrisizworski.com/chris-izworski/"'), "head author link must use the canonical profile");
-assert.ok(layout.includes('href="https://chrisizworski.com/chris-izworski/"') && layout.includes("Chris Izworski</a>"), "visible creator credit must link to the canonical profile");
+assert.ok(layout.includes('href="https://chrisizworski.com/chris-izworski/" style={{ color: "var(--green-bright)" }}>'), "visible creator credit must link to the canonical profile");
 
 console.log("SEO checks passed.");
