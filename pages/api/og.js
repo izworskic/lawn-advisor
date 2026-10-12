@@ -48,11 +48,11 @@ export default async function handler(req, res) {
             <div style={{ fontSize: 280, fontWeight: 900, lineHeight: 1, marginTop: -10 }}>
               {gradeLetter}
             </div>
-            {gradeScore && <div style={{ fontSize: 28, opacity: 0.7 }}>{gradeScore} / 100</div>}
+            {gradeScore && <div style={{ display: 'flex', fontSize: 28, opacity: 0.7 }}>{gradeScore} / 100</div>}
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
-            <div style={{ fontSize: 54, fontWeight: 700, lineHeight: 1.15, marginBottom: 20 }}>
+            <div style={{ display: 'flex', fontSize: 54, fontWeight: 700, lineHeight: 1.15, marginBottom: 20 }}>
               📍 {location}
             </div>
             <div style={{ display: "flex", gap: 24, fontSize: 26, opacity: 0.9, marginBottom: 24, flexWrap: "wrap" }}>
