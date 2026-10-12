@@ -1,4 +1,4 @@
-import { Redis } from "@upstash/redis";
+import { ToolState } from '../../lib/tool-state.cjs';
 import { MICHIGAN_CITIES } from "../../data/michigan-cities";
 import { US_CITIES, buildZipMap } from "../../data/us-cities";
 import { computeGrade, makePlanSlug } from "../../lib/grade";
@@ -20,10 +20,7 @@ for (const city of MICHIGAN_CITIES) {
   };
 }
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
+const redis = new ToolState();
 
 function extractJSON(text) {
   const fenceMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
@@ -230,7 +227,7 @@ export default async function handler(req, res) {
     // Compute shareable lawn grade
     cleanPlan.grade = computeGrade(cleanPlan);
 
-    // Save a shareable version to Redis with a short slug
+    // Save a shareable version to private state with a short slug
     const slug = makePlanSlug();
     try {
       await redis.set(`lawn:share:v2:${slug}`, cleanPlan, { ex: 60 * 60 * 24 * 30 });
