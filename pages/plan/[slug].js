@@ -1,4 +1,3 @@
-import { Redis } from "@upstash/redis";
 import Link from "next/link";
 import Head from "next/head";
 import Layout from "../../components/Layout";
@@ -199,10 +198,8 @@ function ShareButtons({ title, url }) {
 }
 
 export async function getServerSideProps({ params }) {
-  const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN,
-  });
+  const { ToolState } = await import('../../lib/tool-state.cjs');
+  const redis = new ToolState();
   try {
     const plan = await redis.get(`lawn:share:v2:${params.slug}`) || await redis.get(`lawn:share:${params.slug}`);
     if (!plan) return { props: { notFound: true, slug: params.slug } };

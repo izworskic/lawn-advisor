@@ -1,19 +1,13 @@
 import { ImageResponse } from "next/og";
-import { Redis } from "@upstash/redis";
+import { ToolState } from '../../lib/tool-state.cjs';
 
-export const config = { runtime: "edge" };
-
-export default async function handler(req) {
-  const { searchParams } = new URL(req.url);
-  const slug = searchParams.get("slug");
+export default async function handler(req, res) {
+  const slug = typeof req.query.slug === 'string' ? req.query.slug : null;
 
   let plan = null;
   if (slug) {
     try {
-      const redis = new Redis({
-        url: process.env.UPSTASH_REDIS_REST_URL,
-        token: process.env.UPSTASH_REDIS_REST_TOKEN,
-      });
+      const redis = new ToolState();
       plan = await redis.get(`lawn:share:v2:${slug}`) || await redis.get(`lawn:share:${slug}`);
     } catch {}
   }
@@ -27,7 +21,7 @@ export default async function handler(req) {
   const gradeScore = grade.score || "";
   const urgentTask = plan?.urgentTask || "Personalized lawn care by address";
 
-  return new ImageResponse(
+  const image = new ImageResponse(
     (
       <div
         style={{
@@ -79,4 +73,7 @@ export default async function handler(req) {
     ),
     { width: 1200, height: 630 }
   );
+  res.setHeader('Content-Type', 'image/png');
+  res.setHeader('Cache-Control', image.headers.get('cache-control') || 'no-cache');
+  res.status(200).end(Buffer.from(await image.arrayBuffer()));
 }

@@ -1,9 +1,6 @@
-import { Redis } from "@upstash/redis";
+import { ToolState } from '../../lib/tool-state.cjs';
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN,
-});
+const redis = new ToolState();
 
 function formatICSDate(d) {
   return d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
