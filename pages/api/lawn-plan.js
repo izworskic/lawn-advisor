@@ -43,7 +43,7 @@ function extractJSON(text) {
 }
 
 function extractZip(address) {
-  const m = String(address).match(/\b(\d{5})(?:-\d{4})?\s*$/);
+  const m = String(address).match(/\b(\d{5})(?:-\d{4})?(?:\s*,?\s+(?:USA|US|U\.S\.A\.?|U\.S\.?|United States(?: of America)?))?\s*$/i);
   return m ? m[1] : "00000";
 }
 

@@ -13,6 +13,10 @@ test('actual API handler returns a known ZIP fallback on provider errors and ref
   const handler=vm.runInNewContext(source,{MICHIGAN_CITIES:[{...city,name:city.city,zip:'48706'}],US_CITIES:[],buildZipMap:()=>({}),ToolState:class{async get(){throw Error('offline')}async set(){throw Error('offline')}},fallbackPlan,validPlan,evidenceNotice,createHash:require('node:crypto').createHash,Date,AbortSignal,process:{env:mode==='missing-key'?{}:{ANTHROPIC_API_KEY:'fixture'}},fetch:async()=>{if(mode==='network-error')throw Error('offline');return {ok:mode==='malformed',json:async()=>mode==='malformed'?{content:[{type:'text',text:'{"tasks":"bad"}'}]}:{error:{message:'private provider error'}}}}});
   const run=async(address)=>{const res={status(n){this.code=n;return this},json(body){this.body=body;return this}};await handler({method:'POST',body:{address}},res);return res};
   const known=await run('1 Test Street, Bay City, MI 48706');assert.equal(known.code,200);assert.equal(known.body.degraded,true);assert.equal(known.body.plan.location,'Bay City, MI');assert.equal(known.body.plan.shareSlug,undefined);
+  for(const suffix of [', USA',' United States','-1234, U.S.A.','-1234 United States of America',' US']){
+   const result=await run('1 Test Street, Bay City, MI 48706'+suffix);assert.equal(result.code,200,suffix);assert.equal(result.body.plan.location,'Bay City, MI');
+  }
+  assert.equal((await run('48706 Test Street, Bay City, MI')).code,400);
   const unknown=await run('1 Test Street, Unknown, MI 99999');assert.equal(unknown.code,503);assert.doesNotMatch(unknown.body.error,/private provider error/);
   assert.equal((await run('short')).code,400);
  }

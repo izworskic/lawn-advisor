@@ -6,7 +6,7 @@ const TASK_COLORS = { fertilize:"#4a7c59", mow:"#7ab648", water:"#4a90d9", overs
 
 // Address must contain a 5-digit ZIP somewhere
 function hasZip(address) {
-  return /\b\d{5}\b/.test(address);
+  return /\b(\d{5})(?:-\d{4})?(?:\s*,?\s+(?:USA|US|U\.S\.A\.?|U\.S\.?|United States(?: of America)?))?\s*$/i.test(address);
 }
 
 function isReadyToSubmit(address) {
