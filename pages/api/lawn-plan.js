@@ -180,7 +180,9 @@ export default async function handler(req, res) {
   const week = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
   const addressKey = createHash("sha256").update(cleanAddress.toLowerCase()).digest("hex");
   const cacheKey = `lawn:addr:v3:${addressKey}:w${week}`;
-  const degraded = () => {
+  const degraded = (reason, status = null) => {
+    // Fixed enumerated reason/status only: no credentials, addresses, prompts or provider bodies.
+    console.warn(JSON.stringify({ event: "lawn-plan-provider-fallback", reason, status }));
     const plan = fallbackPlan(verified, new Date());
     return plan ? res.status(200).json({ plan, degraded: true }) : res.status(503).json({ error: "Local planning data is unavailable for this ZIP. Try again or consult your local Extension office." });
   };
@@ -190,7 +192,7 @@ export default async function handler(req, res) {
     if (validPlan(cached) && cached.evidenceNotice === evidenceNotice) return res.status(200).json({ plan: cached, cached: true });
   } catch {}
 
-  if (!process.env.ANTHROPIC_API_KEY) return degraded();
+  if (!process.env.ANTHROPIC_API_KEY) return degraded("missing-credential");
   try {
     const response = await fetch("https://api.anthropic.com/v1/messages", {
       signal: AbortSignal.timeout(25000),
@@ -199,18 +201,26 @@ export default async function handler(req, res) {
         "Content-Type": "application/json",
         "x-api-key": process.env.ANTHROPIC_API_KEY,
         "anthropic-version": "2023-06-01",
-        "anthropic-beta": "web-search-2025-03-05",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
+        model: "claude-sonnet-5-5",
+        thinking: { type: "between_tools" },
+        output_config: { effort: "low" },
         max_tokens: 3000,
         tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }],
         messages: [{ role: "user", content: buildPrompt(cleanAddress, verified) }],
       }),
     });
 
-    const data = await response.json();
-    if (!response.ok || data.error) return degraded();
+    if (!response.ok) {
+      const status = response.status;
+      const reason = status === 401 ? "authentication" : status === 402 ? "billing" : status === 403 ? "permission" : status === 404 ? "model-or-endpoint-unavailable" : status === 429 ? "rate-or-spend-limit" : status === 400 ? "invalid-request" : status >= 500 ? "provider-server-error" : "provider-http-error";
+      return degraded(reason, status);
+    }
+    const data = await response.json().catch(() => null);
+    if (!data || data.error) return degraded("invalid-provider-response");
+    if (data.stop_reason && data.stop_reason !== "end_turn") return degraded("incomplete-model-response");
+    if (data.content?.some(b => b.type === "web_search_tool_result" && b.content?.type === "web_search_tool_result_error")) return degraded("web-search-unavailable");
 
     const fullText = (data.content || [])
       .filter(b => b.type === "text")
@@ -218,7 +228,7 @@ export default async function handler(req, res) {
       .join("\n");
 
     const plan = extractJSON(fullText);
-    if (!validPlan(plan)) return degraded();
+    if (!validPlan(plan)) return degraded("invalid-plan-shape");
 
     // Strip citation tags and numeric references from every string field
     const cleanPlan = stripCitations(plan);
@@ -243,6 +253,6 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ plan: cleanPlan });
   } catch (e) {
-    return degraded();
+    return degraded(e?.name === "TimeoutError" || e?.name === "AbortError" ? "provider-timeout" : "provider-transport-error");
   }
 }
