@@ -6,7 +6,7 @@ const TASK_COLORS = { fertilize:"#4a7c59", mow:"#7ab648", water:"#4a90d9", overs
 
 // Address must contain a 5-digit ZIP somewhere
 function hasZip(address) {
-  return /\b\d{5}\b/.test(address);
+  return /\b(\d{5})(?:-\d{4})?(?:\s*,?\s+(?:USA|US|U\.S\.A\.?|U\.S\.?|United States(?: of America)?))?\s*$/i.test(address);
 }
 
 function isReadyToSubmit(address) {
@@ -176,7 +176,7 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
             {/* Example format helper */}
             {address.trim().length === 0 && (
               <div style={{ fontSize:12, color:"var(--text-muted)", paddingLeft:4, opacity:0.7, textAlign:"center" }}>
-                Enter your full street address including ZIP for a plan tailored to your exact property
+                Enter an address with ZIP for regional guidance; verify conditions on your property.
               </div>
             )}
 
@@ -193,7 +193,7 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
           {loading && (
             <div style={{ textAlign:"center", marginTop:20 }}>
               <p style={{ color:"var(--green-primary)", fontSize:14, fontStyle:"italic" }}>
-                Analyzing your specific address: soil type, microclimate, grass type &amp; live conditions...
+                Checking regional lawn guidance and available local context...
               </p>
               <div style={{ display:"flex", justifyContent:"center", gap:20, fontSize:22, marginTop:10 }}>
                 {["📍","🌡️","🌧️","🌱"].map((e,i) => (
@@ -214,6 +214,7 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
       {phase === "result" && plan && (
         <div className="fade-up" style={{ maxWidth:720, margin:"0 auto" }}>
 
+          {plan.evidenceNotice && <div role="status" className="card" style={{ marginBottom:16, borderLeft:"4px solid #c17f24", fontSize:14 }}>{plan.evidenceNotice}</div>}
           {/* Location header */}
           <div className="card" style={{ background:"linear-gradient(135deg,#f0f9e8,#e8f5d0)", marginBottom:16 }}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:10 }}>

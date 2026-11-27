@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node scripts/check-seo.mjs && node scripts/check-network.mjs"
+    "test": "node scripts/check-seo.mjs && node scripts/check-network.mjs && node --test scripts/lawn-plan-evidence.test.cjs"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",
