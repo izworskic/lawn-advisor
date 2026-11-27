@@ -237,13 +237,12 @@ export default function CityPage({ city, calendar, tasks, faq, intro, nearbySlug
         <div className="card" style={{ background: "linear-gradient(135deg, var(--green-deep), var(--green-dark))", border: "none", marginBottom: 40 }}>
           <div style={{ color: "var(--green-light)", marginBottom: 8, fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase" }}>Free Tool</div>
           <h3 style={{ fontFamily: "var(--font-display)", fontSize: 20, color: "var(--green-pale)", marginBottom: 12 }}>
-            Want a fully personalized plan for your exact yard?
+            Want regional planning guidance for your ZIP?
           </h3>
           <p style={{ fontSize: 14, color: "rgba(197,232,160,0.8)", lineHeight: 1.7, marginBottom: 20 }}>
-            This page covers {city.name} broadly. Our AI tool factors in current weather, your specific address, 
-            and today's conditions for a recommendation that's right for <em>this week</em>.
+            This page covers {city.name} broadly. Our tool uses the postal locality and available city reference for conditional seasonal guidance. Check conditions at your own lawn before acting.
           </p>
-          <LawnAdvisorTool defaultAddress={`Your Address, ${city.name}, MI ${city.zip}`} />
+          <LawnAdvisorTool defaultAddress={`${city.zip}`} />
         </div>
 
         {/* Internal links */}

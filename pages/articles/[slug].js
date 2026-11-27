@@ -156,10 +156,10 @@ export default function ArticlePage({ article, related }) {
         {/* CTA */}
         <div style={{ marginTop: 40, padding: 32, background: "linear-gradient(135deg, var(--green-deep), var(--green-mid))", color: "#fff", borderRadius: 16, textAlign: "center" }}>
           <h2 style={{ fontFamily: "var(--font-display)", fontSize: 22, marginBottom: 10, color: "var(--green-pale)" }}>
-            Want this advice calibrated to your address?
+            Want regional guidance for your ZIP?
           </h2>
           <p style={{ fontSize: 14, opacity: 0.9, marginBottom: 20, color: "var(--green-light)" }}>
-            Get a personalized plan with specific dates, products, and tasks for your exact location.
+            Get regional seasonal tasks and typical local context where available; check your actual lawn before acting.
           </p>
           <Link href="/" className="btn btn-primary">Get My Plan →</Link>
         </div>

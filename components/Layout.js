@@ -6,7 +6,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 
 export default function Layout({ children, title, description, canonical }) {
   const pageTitle = title ? `${title} | Perfect Lawn Advisor` : "Perfect Lawn Advisor: Hyperlocal Lawn Care by ZIP Code";
-  const pageDesc = description || "Get a personalized lawn care plan based on your exact ZIP code, USDA hardiness zone, grass type, and current weather conditions. Michigan and beyond.";
+  const pageDesc = description || "Regional lawn care guidance by ZIP code, with city climate and turf references where available. Verify actual lawn conditions.";
 
   return (
     <>
@@ -78,7 +78,7 @@ export default function Layout({ children, title, description, canonical }) {
           <div className="footer-brand">
             <h3>🌿 Perfect Lawn Advisor</h3>
             <p>
-              Hyperlocal lawn care guidance powered by AI, local climate data, and turfgrass science.
+              Regional lawn care guidance using ZIP locality, available city references and turfgrass science.
               Research and methodology by{" "}
               <a href="https://chrisizworski.com/chris-izworski/" style={{ color: "var(--green-bright)" }}>
                 Chris Izworski

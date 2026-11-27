@@ -59,7 +59,7 @@ The fix: wait for soil temperatures to cross the 55-degree threshold and hold th
 
 ## Personalized Timing
 
-For a plan that factors in your exact address, current soil temperature estimates, and local frost dates, use the free [Perfect Lawn Advisor tool](/): enter your address and get fertilization dates specific to your property.
+For regional planning guidance, use the free [Perfect Lawn Advisor tool](/): enter your ZIP and check actual soil temperature, grass growth and local restrictions before fertilizing.
 `,
   },
 
