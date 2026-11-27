@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { lookupPostal, hasStateConflict, resolveReference } from "../../lib/postal-geography.cjs";
 import { ToolState } from '../../lib/tool-state.cjs';
 import { MICHIGAN_CITIES } from "../../data/michigan-cities";
 import { US_CITIES, buildZipMap } from "../../data/us-cities";
@@ -71,52 +71,33 @@ function stripCitations(value) {
   return value;
 }
 
-// Look up verified city data from our combined ZIP map
-function lookupCity(zip) {
-  return _zipMap[zip] || null;
-}
-
-function buildPrompt(address, verified) {
+function buildPrompt(location, verified) {
   const today = new Date().toLocaleDateString("en-US", {
     month: "long", day: "numeric", year: "numeric",
   });
 
   // If we have verified data, anchor the prompt with it so the model cannot hallucinate zone/soil/grass
-  const verifiedBlock = verified ? `
-REGIONAL REFERENCE DATA: These are existing ZIP-level city estimates, not measurements of this property. Do NOT invent property measurements or represent these estimates as verified parcel data:
-- USDA Hardiness Zone: Zone ${verified.zone} (confirmed Zone ${verified.zone}, do not change this)
+  const verifiedBlock = `
+REGIONAL CITY REFERENCE ESTIMATES (not measurements or verified property facts):
+- Typical hardiness zone: Zone ${verified.zone}
 - Average last spring frost: ${verified.avgLastFrost}
 - Average first fall frost: ${verified.avgFirstFrost}
-- Dominant grass type for this location: ${verified.grassType}
-- Soil type: ${verified.soilType}
-- Location: ${verified.city}, ${verified.state}${verified.county ? ` (${verified.county} County)` : ""}
-- Known local challenges: ${verified.challenges}
+- Common regional grass types: ${verified.grassType}
+- Typical soil: ${verified.soilType}
+- Location: ${verified.city}, ${verified.state}
+- Regional challenges: ${verified.challenges}
 
-Use web search for dated regional weather and reliable local guidance. Do not infer the actual grass species, soil, drainage, shade, or microclimate of an individual property. If a measurement is unavailable, say so.
-` : `
-Use web search to research:
-1. USDA hardiness zone and Koppen climate class for this exact location
-2. Current weather conditions and recent rainfall at this address
-3. Typical soil type for this neighborhood
-4. Dominant grass species used in this area
-5. Any locally relevant factors: proximity to water, elevation, urban heat, lake effect, etc.
+Use web search for dated regional weather and reliable local Extension guidance. Treat all weather, climate and grass type as regional context. Never infer shade, drainage, elevation, water proximity, soil condition or actual species at a property. Recommend checking actual conditions first. Do not give definitive product or pesticide application instructions without label and local guidance.
 `;
 
-  return `You are an expert turfgrass agronomist providing a hyperlocal lawn care plan for a specific property address.
-
+  return `You are a turfgrass agronomy guide providing conditional regional lawn planning guidance.
 Today is ${today}.
-Property address: ${address}
+Postal locality: ${location}
 ${verifiedBlock}
-Think about what makes THIS specific address unique for lawn care:
-- Street-level microclimates (shade from nearby buildings or trees, slope and aspect)
-- Urban vs. suburban vs. rural character of the neighborhood
-- Whether it is near a lake, river, or large body of water
-- Regional pest and disease pressures specific to this municipality
-
 Then output a single JSON object. Output only the JSON, no introduction or explanation before or after.
 
 {
-  "address": "${address}",
+  "address": "${location}",
   "location": "${verified ? `${verified.city}, ${verified.state}` : "Use a location supported by evidence or say unverified"}",
   "zone": "${verified ? `Zone ${verified.zone}` : "Zone 6a"}",
   "climate": "Humid Continental",
@@ -124,10 +105,10 @@ Then output a single JSON object. Output only the JSON, no introduction or expla
   "season": "spring",
   "soilTemp": "Not measured at this property",
   "soilType": "${verified ? verified.soilType : "Loam"}",
-  "currentCondition": "One sentence: what is happening with lawns at this specific address right now.",
+  "currentCondition": "Regional seasonal context only; actual lawn condition is unknown.",
   "propertyNotes": "Regional context and what the visitor needs to verify on site. Do not invent property-specific facts.",
-  "insight": "Two to three sentences of expert analysis grounded in the VERIFIED FACTS above. Reference the correct zone (Zone ${verified ? verified.zone : "6a"}), the correct grass type, and the specific local challenges for this address. Do not contradict the verified zone or grass data.",
-  "urgentTask": "The single most important lawn task for this address and today's date, one sentence.",
+  "insight": "Conditional regional guidance based on the city estimates, not actual grass or soil measurements.",
+  "urgentTask": "A conditional regional planning priority; confirm local conditions before action.",
   "tasks": [
     {
       "category": "fertilize",
@@ -142,7 +123,7 @@ Then output a single JSON object. Output only the JSON, no introduction or expla
     { "month": 2, "task": "fertilize", "intensity": 2 }
   ],
   "tips": [
-    "Tip specific to this address, zone, and local conditions.",
+    "Regional planning tip, subject to actual site conditions.",
     "Tip two.",
     "Tip three."
   ]
@@ -164,8 +145,8 @@ export default async function handler(req, res) {
 
   const { address } = req.body || {};
   const cleanAddress = typeof address === "string" ? address.trim() : "";
-  if (cleanAddress.length < 10 || cleanAddress.length > 250) {
-    return res.status(400).json({ error: "Please enter a full street address including ZIP code." });
+  if (cleanAddress.length < 5 || cleanAddress.length > 250) {
+    return res.status(400).json({ error: "Enter a five-digit US ZIP code or an address ending in one." });
   }
 
   const zip = extractZip(cleanAddress);
@@ -173,23 +154,31 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Address must include a 5-digit ZIP code for accurate results." });
   }
 
-  // Look up verified city data: prevents AI from hallucinating zone/soil/grass info
-  const verified = lookupCity(zip);
+  const postal = lookupPostal(zip);
+  if (!postal) return res.status(503).json({ error: "ZIP locality is not in the current postal reference. Check the ZIP or consult your local Extension office." });
+  if (hasStateConflict(cleanAddress, postal)) return res.status(400).json({ error: "The supplied state conflicts with this ZIP. Check the ZIP and state." });
+  const { reference: verified, scope } = resolveReference(postal, _zipMap);
+  const locality = `${postal.city}, ${postal.state} ${zip}`;
+  const geoNotice = scope === "zip-reference" ? "Existing city reference for this ZIP." : scope === "city-reference" ? "Existing same-city reference; not specific to this ZIP." : "Postal locality only; no detailed agronomic city reference.";
+  const notice = evidenceNotice + " " + geoNotice;
+  if (!verified) {
+    const plan = fallbackPlan(postal, new Date());
+    return res.status(200).json({ plan: { ...plan, location: locality, evidenceNotice: notice + " Showing general checks only; local climate and growing conditions are not established." }, degraded: true, geography: scope });
+  }
 
-  // Cache by normalized address + week
+  // Cache regional ZIP context only; never send a street address to the model.
   const week = Math.floor(Date.now() / (1000 * 60 * 60 * 24 * 7));
-  const addressKey = createHash("sha256").update(cleanAddress.toLowerCase()).digest("hex");
-  const cacheKey = `lawn:addr:v3:${addressKey}:w${week}`;
+  const cacheKey = `lawn:zip:v4:${zip}:w${week}`;
   const degraded = (reason, status = null) => {
     // Fixed enumerated reason/status only: no credentials, addresses, prompts or provider bodies.
     console.warn(JSON.stringify({ event: "lawn-plan-provider-fallback", reason, status }));
     const plan = fallbackPlan(verified, new Date());
-    return plan ? res.status(200).json({ plan, degraded: true }) : res.status(503).json({ error: "Local planning data is unavailable for this ZIP. Try again or consult your local Extension office." });
+    return res.status(200).json({ plan: { ...plan, location: locality, evidenceNotice: plan.evidenceNotice + " " + geoNotice }, degraded: true, geography: scope });
   };
 
   try {
     const cached = await redis.get(cacheKey);
-    if (validPlan(cached) && cached.evidenceNotice === evidenceNotice) return res.status(200).json({ plan: cached, cached: true });
+    if (validPlan(cached) && cached.evidenceNotice === notice && cached.location === locality) return res.status(200).json({ plan: cached, cached: true, geography: scope });
   } catch {}
 
   if (!process.env.ANTHROPIC_API_KEY) return degraded("missing-credential");
@@ -208,7 +197,7 @@ export default async function handler(req, res) {
         output_config: { effort: "low" },
         max_tokens: 3000,
         tools: [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }],
-        messages: [{ role: "user", content: buildPrompt(cleanAddress, verified) }],
+        messages: [{ role: "user", content: buildPrompt(locality, verified) }],
       }),
     });
 
@@ -236,13 +225,16 @@ export default async function handler(req, res) {
     // Enforce verified facts on the output: last line of defense against hallucination
     if (verified) {
       cleanPlan.zone = `Zone ${verified.zone}`;
-      cleanPlan.location = `${verified.city}, ${verified.state}`;
+      cleanPlan.location = locality;
       cleanPlan.grassType = verified.grassType;
       cleanPlan.soilType = verified.soilType;
     }
 
     // Regional context, not measured property condition or a lawn health grade.
-    cleanPlan.evidenceNotice = evidenceNotice;
+    cleanPlan.evidenceNotice = notice;
+    cleanPlan.currentCondition = "Current condition at your property is not measured.";
+    cleanPlan.propertyNotes = "Check your grass species, soil, drainage, shade and actual weather before following regional advice.";
+    delete cleanPlan.address;
     cleanPlan.soilTemp = "Not measured at this property";
     cleanPlan.grade = null;
     delete cleanPlan.shareSlug;
@@ -251,7 +243,7 @@ export default async function handler(req, res) {
     // Do not automatically publish a street-address plan to a public URL.
     try { await redis.set(cacheKey, cleanPlan, { ex: 60 * 60 * 24 * 7 }); } catch {}
 
-    return res.status(200).json({ plan: cleanPlan });
+    return res.status(200).json({ plan: cleanPlan, geography: scope });
   } catch (e) {
     return degraded(e?.name === "TimeoutError" || e?.name === "AbortError" ? "provider-timeout" : "provider-transport-error");
   }

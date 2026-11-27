@@ -319,10 +319,10 @@ export default function ShopPage() {
               Not sure what your lawn needs?
             </h2>
             <p style={{ fontSize: 14, color: "var(--text-muted)", marginBottom: 24, maxWidth: 480, margin: "0 auto 24px" }}>
-              Enter your address and our AI advisor will tell you exactly which products to buy,
+              Enter your ZIP and our advisor offers conditional regional planning suggestions,
               when to apply them, and in what order based on your specific location and current conditions.
             </p>
-            <Link href="/" className="btn btn-primary">Get My Address Plan →</Link>
+            <Link href="/" className="btn btn-primary">Get My Regional Plan →</Link>
           </div>
 
           {/* Affiliate disclosure */}

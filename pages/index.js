@@ -17,7 +17,7 @@ export default function HomePage() {
   return (
     <Layout
       title="Personalized Lawn Care Plan by Address"
-      description="Enter your full address and get a lawn care plan tailored to your exact property: USDA zone, soil type, local grass species, microclimate, and live weather conditions."
+      description="Enter a US ZIP code for regional lawn planning guidance, typical grass and soil context where available, and conditional seasonal tasks."
       canonical="https://lawn.chrisizworski.com"
     >
       {/* Schema: SoftwareApplication */}
@@ -30,7 +30,7 @@ export default function HomePage() {
             name: "Perfect Lawn Advisor",
             applicationCategory: "LifestyleApplication",
             url: "https://lawn.chrisizworski.com",
-            description: "AI-powered personalized lawn care plans by street address",
+            description: "AI-assisted regional lawn planning by ZIP code",
             author: {
               "@type": "Person",
               "@id": "https://chrisizworski.com/#person",
@@ -65,7 +65,7 @@ export default function HomePage() {
                 name: "How is Perfect Lawn Advisor different from other lawn care apps?",
                 acceptedAnswer: {
                   "@type": "Answer",
-                  text: "Most lawn apps use ZIP code averages. Perfect Lawn Advisor analyzes your exact street address to account for microclimate factors like proximity to water, soil type, and neighborhood character. USDA zone, grass type, and soil data are verified against authoritative databases to prevent AI hallucination.",
+                  text: "The ZIP identifies a postal locality and the tool uses an existing city reference when available. Grass, soil, drainage and weather at your property are not measured. Confirm local conditions before acting.",
                 },
               },
               {
@@ -89,7 +89,7 @@ export default function HomePage() {
                 name: "What USDA zones does Perfect Lawn Advisor cover?",
                 acceptedAnswer: {
                   "@type": "Answer",
-                  text: "All zones from 3a (Alaska) through 12b (Hawaii). We have verified ZIP-level data for over 150 cities across every state plus DC. Addresses outside our verified database use live web search for zone and grass type.",
+                  text: "The postal directory contains 42,049 ZIP records in its source snapshot. Detailed regional lawn references cover selected cities only; other recognized ZIPs get general checks without invented local estimates.",
                 },
               },
               {
@@ -97,7 +97,7 @@ export default function HomePage() {
                 name: "Can I share my lawn plan with others?",
                 acceptedAnswer: {
                   "@type": "Answer",
-                  text: "Yes. Every generated plan gets a unique shareable URL with a lawn grade and personalized results. Plans remain accessible for 30 days and can be shared via native share, copy link, or social media buttons.",
+                  text: "New plans are not automatically published or assigned a lawn health grade. No street address is sent to the AI provider.",
                 },
               },
             ],
@@ -125,7 +125,7 @@ export default function HomePage() {
         <div className="container-narrow" style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
           <div style={{ marginBottom: 12 }}>
             <span className="tag" style={{ background: "rgba(122,182,72,0.15)", color: "var(--green-bright)", fontSize: 11, letterSpacing: 2 }}>
-              🌿 Address-Based · AI-Powered · Free
+              🌿 ZIP-Based · AI-Assisted · Free
             </span>
           </div>
           <h1 style={{
@@ -156,10 +156,10 @@ export default function HomePage() {
               WebkitTextFillColor: "transparent",
               animation: "shimmer 4s linear infinite",
             }}>perfect lawn</span>
-            {" "}starts with your address.
+            {" "}starts with your ZIP code.
           </h1>
           <p style={{ color: "var(--green-light)", fontSize: "clamp(14px, 2vw, 18px)", maxWidth: 580, margin: "0 auto 36px", lineHeight: 1.7, opacity: 0.9 }}>
-            Get a lawn care plan built for your specific property. We analyze your exact address: hardiness zone, soil type, neighborhood microclimate, local pest pressure, and what's happening with the weather at your location right now.
+            Find regional lawn guidance using your ZIP code. Where a city reference is available, explore typical climate, grasses and seasonal care. Your actual lawn, soil and microclimate need to be checked on site.
           </p>
 
           {/* Address Tool embedded in hero */}
@@ -215,15 +215,15 @@ export default function HomePage() {
           <div style={{ textAlign: "center", marginBottom: 48 }}>
             <div className="section-label" style={{ justifyContent: "center", display: "flex" }}>How It Works</div>
             <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(24px,4vw,38px)", color: "var(--green-dark)", marginTop: 8 }}>
-              Science-backed. Hyperlocal. Instantly useful.
+              Regional guidance for real lawn conditions.
             </h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
             {[
-              { icon: "📍", title: "Your Exact Location", desc: "We analyze your exact street address: USDA zone, Koppen climate class, neighborhood soil type, and local microclimate factors like proximity to water or tree canopy." },
-              { icon: "🌾", title: "Your Grass Species", desc: "Kentucky Bluegrass thrives differently than Fine Fescue or Tall Fescue. We tailor every recommendation to what's actually growing in your yard." },
-              { icon: "🌦️", title: "Live Weather Data", desc: "Current conditions and recent precipitation affect everything from when to fertilize to whether your lawn needs water today." },
-              { icon: "📅", title: "12-Month Calendar", desc: "A full-year care calendar mapped to your property's specific frost dates and local conditions, not a regional average." },
+              { icon: "📍", title: "Your Postal Locality", desc: "Your ZIP identifies a postal locality, not a parcel or measured conditions. Regional estimates are shown only where a city reference is available." },
+              { icon: "🌾", title: "Typical Regional Grasses", desc: "Kentucky bluegrass, fine fescue and tall fescue respond differently to care. Identify your own grass before choosing a treatment." },
+              { icon: "🌦️", title: "Regional Weather Context", desc: "Regional weather can inform planning. Check current conditions, soil moisture and local restrictions before acting." },
+              { icon: "📅", title: "12-Month Calendar", desc: "A regional calendar when a city reference is available. Actual seasonal timing and frost dates can differ." },
             ].map((f, i) => (
               <div key={i} className="card" style={{ textAlign: "center" }}>
                 <div style={{ fontSize: 40, marginBottom: 16 }}>{f.icon}</div>
@@ -250,7 +250,7 @@ export default function HomePage() {
         <div className="container-narrow" style={{ textAlign: "center" }}>
           <div className="section-label" style={{ display: "flex", justifyContent: "center" }}>Michigan Lawn Care Guides</div>
           <h2 style={{ fontFamily: "var(--font-display)", fontSize: "clamp(24px,4vw,36px)", color: "var(--green-dark)", margin: "10px 0 16px" }}>
-            Guides for every Michigan city and climate zone
+            Guides for Michigan cities and climate zones
           </h2>
           <p style={{ fontSize: 15, color: "var(--text-muted)", marginBottom: 32, maxWidth: 520, margin: "0 auto 32px" }}>
             From Zone 5a in the Upper Peninsula to Zone 6b in the southwest, Michigan spans multiple 
@@ -280,7 +280,7 @@ export default function HomePage() {
                 </p>
                 <p>
                   Zone 6a Bay City lawns behave nothing like Zone 5a Marquette lawns. This tool bridges that gap 
-                  with AI-powered, hyperlocal recommendations grounded in turfgrass science.
+                  with AI-assisted regional recommendations grounded in turfgrass science.
                 </p>
               </div>
               <Link href="/about" className="btn btn-outline" style={{ marginTop: 20, fontSize: 13 }}>
@@ -290,12 +290,12 @@ export default function HomePage() {
             <div className="card" style={{ background: "var(--green-pale)", border: "none" }}>
               <div className="section-label">Methodology</div>
               {[
-                "USDA Hardiness Zone mapping by exact address",
-                "NRCS Web Soil Survey for soil type",
-                "NWS current conditions via web search",
+                "Regional hardiness zone estimates where available",
+                "Typical city soil references; confirm with a soil test",
+                "Regional weather context when available",
                 "MSU Extension turfgrass research",
-                "Frost date data from NOAA climatology",
-                "Amazon Associates product vetting",
+                "Regional frost-date estimates",
+                "Optional product links; check the label before use",
               ].map((item, i) => (
                 <div key={i} style={{ display: "flex", gap: 10, padding: "8px 0", borderBottom: i < 5 ? "1px solid var(--border)" : "none", alignItems: "center" }}>
                   <span style={{ color: "var(--green-bright)", fontWeight: 900 }}>✓</span>

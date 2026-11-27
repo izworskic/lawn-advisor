@@ -12,7 +12,7 @@ function hasZip(address) {
 function isReadyToSubmit(address) {
   const trimmed = address.trim();
   // Need at least a street number + something + ZIP
-  return trimmed.length >= 10 && hasZip(trimmed);
+  return trimmed.length >= 5 && hasZip(trimmed);
 }
 
 function LoadingDots() {
@@ -132,11 +132,12 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
               <input
                 ref={inputRef}
                 type="text"
-                autoComplete="street-address"
+                autoComplete="postal-code"
+                aria-label="US ZIP code or address ending in ZIP"
                 value={address}
                 onChange={e => setAddress(e.target.value)}
                 onKeyDown={e => e.key === "Enter" && ready && fetchPlan()}
-                placeholder="123 Oak Street, Bay City, MI 48706"
+                placeholder="48706 or Bay City, MI 48706"
                 style={{
                   width:"100%",
                   fontSize:16,
@@ -169,14 +170,14 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
             {/* ZIP hint */}
             {showZipHint && (
               <div style={{ fontSize:12, color:"#c17f24", paddingLeft:4, display:"flex", alignItems:"center", gap:6 }}>
-                <span>⚠️</span> Include your 5-digit ZIP code for the most accurate plan
+                <span>⚠️</span> Include a five-digit ZIP code for regional guidance
               </div>
             )}
 
             {/* Example format helper */}
             {address.trim().length === 0 && (
               <div style={{ fontSize:12, color:"var(--text-muted)", paddingLeft:4, opacity:0.7, textAlign:"center" }}>
-                Enter an address with ZIP for regional guidance; verify conditions on your property.
+                Enter your five-digit US ZIP code. No street address is needed; verify conditions on your property.
               </div>
             )}
 
@@ -220,18 +221,18 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:10 }}>
               <div>
                 <div style={{ fontSize:11, fontWeight:700, letterSpacing:2, textTransform:"uppercase", color:"var(--green-primary)", marginBottom:4 }}>
-                  Your Address Plan
+                  Your Regional Plan
                 </div>
                 <div style={{ fontFamily:"var(--font-display)", fontSize:20, fontWeight:900, color:"var(--green-dark)" }}>
-                  📍 {plan.address || plan.location}
+                  📍 {plan.location}
                 </div>
                 <div style={{ fontSize:13, color:"var(--green-primary)", marginTop:6, display:"flex", gap:16, flexWrap:"wrap" }}>
-                  <span>🌡️ {plan.zone}</span>
-                  <span>🌾 {plan.grassType}</span>
+                  <span>🌡️ Regional zone: {plan.zone}</span>
+                  <span>🌾 Typical grass: {plan.grassType}</span>
                   {plan.soilTemp && <span>🌱 Soil: {plan.soilTemp}</span>}
                 </div>
               </div>
-              <SeasonBadge season={plan.season || "spring"} />
+              {plan.calendar?.length > 0 && <SeasonBadge season={plan.season || "spring"} />}
             </div>
 
             {/* Property-specific notes */}
@@ -245,7 +246,7 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
               <div style={{ marginTop:14, background:"rgba(122,182,72,0.1)", border:"1px solid rgba(122,182,72,0.3)", borderRadius:10, padding:"12px 16px", display:"flex", gap:10, alignItems:"flex-start" }}>
                 <span style={{ fontSize:18 }}>⚡</span>
                 <div>
-                  <div style={{ fontSize:10, fontWeight:700, letterSpacing:2, textTransform:"uppercase", color:"var(--green-primary)", marginBottom:2 }}>Do This Now</div>
+                  <div style={{ fontSize:10, fontWeight:700, letterSpacing:2, textTransform:"uppercase", color:"var(--green-primary)", marginBottom:2 }}>Check Before Acting</div>
                   <div style={{ fontWeight:600, fontSize:14, color:"var(--green-dark)" }}>{plan.urgentTask}</div>
                 </div>
               </div>
@@ -255,7 +256,7 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
           {/* Expert insight */}
           {plan.insight && (
             <div className="card" style={{ marginBottom:16, borderLeft:"4px solid var(--green-bright)" }}>
-              <div className="section-label">Expert Analysis for This Property</div>
+              <div className="section-label">Regional Planning Guidance</div>
               <p style={{ fontStyle:"italic", color:"var(--text-muted)", fontSize:14, lineHeight:1.8, margin:0 }}>{plan.insight}</p>
             </div>
           )}
@@ -271,7 +272,7 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
           {/* Tasks */}
           {plan.tasks && plan.tasks.length > 0 && (
             <div style={{ marginBottom:16 }}>
-              <div className="section-label" style={{ marginBottom:10 }}>Your Next 60 Days</div>
+              <div className="section-label" style={{ marginBottom:10 }}>Planning Tasks</div>
               {plan.tasks.map((t, i) => <TaskCard key={i} task={t} />)}
             </div>
           )}
@@ -279,7 +280,7 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
           {/* Tips */}
           {plan.tips && plan.tips.length > 0 && (
             <div className="card" style={{ marginBottom:24, background:"#f0f9e8" }}>
-              <div className="section-label">Address-Specific Tips</div>
+              <div className="section-label">Regional Planning Tips</div>
               {plan.tips.map((tip, i) => (
                 <div key={i} style={{ display:"flex", gap:10, marginBottom:10, alignItems:"flex-start" }}>
                   <span style={{ color:"var(--green-bright)", fontWeight:900, fontSize:14 }}>✓</span>
@@ -293,7 +294,7 @@ export default function LawnAdvisorTool({ defaultAddress = "" }) {
             <div style={{ fontSize:12, color:"var(--text-muted)", fontStyle:"italic", marginBottom:12 }}>
               Research by <a href="https://chrisizworski.com">Chris Izworski</a> · Turfgrass science + MSU Extension + USDA zone data
             </div>
-            <button onClick={reset} className="btn btn-outline" style={{ fontSize:13 }}>← Analyze a Different Address</button>
+            <button onClick={reset} className="btn btn-outline" style={{ fontSize:13 }}>← Check a Different ZIP</button>
           </div>
         </div>
       )}
